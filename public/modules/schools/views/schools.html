@@ -1,0 +1,39 @@
+<div class="container-fluid schoolsList" >
+
+     <h4 class="tableTitle">全部学校</h4>
+        <form class="form-inline pull-right" role="form">
+             <div class="form-group">
+                 <input ng-model="newSchoolName" class="form-control" placeholder="新学校名称"/>
+             </div>
+             <button ng-click="createNewSchool()" type="submit" class="btn btn-primary btn-warning ">创建</button>
+         </form>
+        <!--<h5>学校总数: {{schoolCount}}  </h5>-->
+
+
+    <div id="schools-table">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>学校名称</th>
+                <th>学生人数</th>
+                <th>老师人数</th>
+                <th>班级数</th>
+                <th>登录晓书人数<th>
+
+            </tr>
+            <tr ng-click="schoolPage($index)" ng-repeat="school in schools" class="clickable">
+                <td>{{school.name}}</td>
+                <td>{{school.studentCount}}</td>
+                <td>{{school.teacherCount}}</td>
+                <td>{{school.roomCount}}</td>
+                <td>{{school.xiaoshuLogCount}}</td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

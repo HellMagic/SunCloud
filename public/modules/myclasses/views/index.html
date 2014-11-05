@@ -1,0 +1,128 @@
+<div>
+    <div class="container-fluid page-box-white">
+        <div class="col-sm-3">
+            <div class="page-box-white myclasses">
+                <h3 style="text-align:center;color: seagreen">我的班级</h3>
+                <ul id="classesList" class="list-group">
+                    <li ng-repeat="classItem in classes" ng-class="{active: classItem.isActive}" style="list-style-type:none" >
+                        <a ng-click="selectOneClass(classItem)" class="list-group-item list-group-item-success">
+                            {{classItem.name}}
+                            <!--<span class="badge">{{classItem.students.length}}</span>-->
+                            <span ng-repeat="subject in classItem.mySubject">
+                                <span class="badge pull-right">{{subject}}</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div ng-if="!classes || classes.length === 0">
+                    <h5  style="color:green">您还没有任何班级,您可以：</h5>
+                </div>
+
+                <a class="btn btn-primary btn-success center-block" ng-click="claimClassButton()" ><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+                <br>
+                <a class="btn btn-primary btn-success center-block" ng-click="createClassButton()" ><span class="glyphicon glyphicon-plus"></span> 创建班级</a>
+
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div ui-view></div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="showTip_classCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true" style="overflow-y:scroll">
+        <div class='modal-dialog' style="left: auto">
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <!--<button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="false"></button>-->
+                    <h4 class="modal-title">创建班级</h4>
+                </div>
+                <div class='modal-body'>
+
+                    <div class="form-group">
+                        <div class="input-group input-group-lg">
+                            <input class="form-control" placeholder="请输入班级名称" ng-model="newClassName">
+
+                            <div class="input-group-btn">
+                                <button type="button" class="btn  btn-success"
+                                        ng-click="createClass()">创建</button>
+                            </div>
+                        </div>
+                        <span ng-show="temp.createClassTip=='noName'" class="error-msg">请填写新班级名称</span>
+                        <span ng-show="temp.createClassTip=='formatWrong'" class="error-msg">班级名称不可以超过15个字符，请修改名称</span>
+                        <span ng-show="temp.createClassTip=='alreadyHave'" class="error-msg">您已经用此名称创建过班级，请修改名称</span>
+                    </div>
+                </div>
+
+                <!--<div class="modal-footer">-->
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
+                    <!--<button type="button" class="btn btn-primary">创建</button>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade bs-example" id="showTip_classCreated" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                创建成功！
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="showTip_classClaim" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times</button>
+                    <h4 class="modal-title">认领班级</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="className">班级：</label>
+                            <select class="form-control" id="selectClass" data-ng-options="class.name for class in classList" data-ng-model="selectedClass">
+                            </select>
+                            <br>
+                            <label for="subject">科目：</label>
+                            <select class="form-control" id="selectSubject" data-ng-options="subject.name for subject in subjectList" data-ng-model="selectedSubject">
+                            </select>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" ng-click="claimClass()" class="btn btn-success" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+<!--<div ng-controller="myClassesController">-->
+    <!--<div class="container">-->
+        <!--<div class="col-sm-3">-->
+            <!--<div class="page-box-white">-->
+                <!--<a href ng-click="createClassButton()" class="pull-right"> 创建班级</a>-->
+                <!--<h4>我的班级</h4>-->
+                <!--<ul id="myClassesList" class="nav">-->
+                    <!--<li ng-repeat="classItem in classes" ng-class="{active: classItem.isActive}">-->
+                        <!--<a href="" ng-click="selectOneClass(classItem)">-->
+                            <!--{{classItem.name}}-->
+                        <!--</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+

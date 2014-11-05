@@ -1,0 +1,16 @@
+.school-nav {
+    margin-top: 50px;
+}
+
+li .active {
+    color: green;
+    background-color: red;
+}
+
+.schoolList {
+    margin-top: 20px;
+}
+
+#schools-table {
+    margin-top: 30px;
+}

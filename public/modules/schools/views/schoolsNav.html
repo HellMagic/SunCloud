@@ -1,0 +1,14 @@
+<div>
+    <div class="container-fluid ">
+        <div class="col-sm-2">
+            <div class="list-group school-nav">
+                <a class="list-group-item" style="text-align: center" ng-repeat="item in items" ng-click="goto(item.state)" ng-class="{active: selectedState===item.state}">{{item.name}}</a>
+            </div>
+        </div>
+
+        <div class="col-sm-10">
+            <div ui-view></div>
+        </div>
+    </div>
+</div>
+

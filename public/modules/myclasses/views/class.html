@@ -1,0 +1,85 @@
+<div>
+
+    <div class="class-header">
+        <h4><span ng-if="!isEditClassName">{{theClass.name}}</span>
+            <input style="color:black " type="text" ng-if="isEditClassName" ng-model="theClass.name" ng-blur="editClassNameOver()">
+            <!--&nbsp &nbsp<span class="glyphicon glyphicon-edit" data-tooltip-style="light" data-toggle="tooltip" data-placement="right" title="修改班名"-->
+                             <!--ng-click="editClassName()" href=""></span>-->
+        </h4>
+
+
+        <!--<button type="button" class="btn btn-default btn-xs">-->
+        <!--</button>-->
+
+        <a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="showDisbandClassDialog()"><span class="glyphicon glyphicon-trash"></span>  解散班级</a>
+        <a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="editClassName()"><span class="glyphicon glyphicon-edit"></span>  修改班名</a>
+        <a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="showJoinStudentDialog()"><span class="glyphicon glyphicon-plus"></span> 添加学生</a>
+        <p>
+            学生人数：{{theClass.students.length}} &nbsp （ 其中{{noTabletNum}}人尚未登录晓书 ）
+        </p>
+    </div>
+
+    <div class="gridStyle" ng-grid="gridOptions" ng-if="theClass.students && theClass.students.length > 0" ></div>
+    <div ng-if="!theClass.students || theClass.students.length<=0">
+        <h3>还没有任何学生 <button class="btn btn-success btn-lg" type="button" ng-click="showJoinStudentDialog()"><span class="glyphicon glyphicon-plus"></span>  添加学生</button></h3>
+    </div>
+
+
+    <div class="modal fade" id="disbandClassDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">解散班级</h4>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要解散班级{{theClass.name}}吗？
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="disbandClass()">解散</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="joinStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">添加学生</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="addStudentForm" novalidation ng-submit="joinStudent(addStudentForm)">
+                        <div class="form-group">
+
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block">添加学生</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="logoutDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">登出平板</h4>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要将{{row.entity.username}}登出晓书吗？
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="logout(row)">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

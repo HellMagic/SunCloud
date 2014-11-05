@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <form class="form-inline pull-right">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">
+            <input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">
+            <input type="text" class="form-control" placeholder="新学生备注" ng-model="newStudent.remark">
+        </div>
+        <button class="btn btn-primary fui-plus" ng-click="createStudent()">添加学生</button>
+    </form>
+    <p class="tableTitle">所有学生</p>
+    <div class="table">
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+</div>

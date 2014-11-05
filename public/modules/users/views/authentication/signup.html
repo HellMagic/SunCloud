@@ -1,0 +1,29 @@
+<section class="row" data-ng-controller="AuthenticationController">
+    <h1 class="col-md-12 text-center" style="text-align:center">注册新用户</h1>
+
+    <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+		<form name="userForm" data-ng-submit="signup()" class="signin form-horizontal" novalidate autocomplete="off">
+			<fieldset>
+				<div class="form-group">
+					<label for="username">用户名</label>
+					<input type="text" required id="username" name="username" class="form-control" data-ng-model="credentials.username" placeholder="">
+				</div>
+				<div class="form-group">
+					<label for="name">中文姓名</label>
+					<input type="text" required id="name" name="name" class="form-control" data-ng-model="credentials.name" placeholder="">
+				</div>
+				<div class="form-group">
+					<label for="password">密码</label>
+					<input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password" placeholder="">
+				</div>
+				<div class="text-center form-group">
+					<button type="submit" class="btn btn-large btn-primary">注册</button>&nbsp; or&nbsp;
+					<a href="/signin" class="show-signup">登录</a>
+				</div>
+				<div data-ng-show="error" class="text-center text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</section>
