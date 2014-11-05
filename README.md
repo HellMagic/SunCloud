@@ -13,7 +13,7 @@ Run the back-end of SunLauncher and SunPack on cloud.
 Clone this Repo :
 
 ```
-~$ git clone https://github.com/guanghetv/SunCloud.git
+~$ git clone https://github.com/summer-liu/SunCloud.git
 ```
 
 Install npm package and bower lib:
