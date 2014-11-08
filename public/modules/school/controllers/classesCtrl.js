@@ -4,6 +4,7 @@ angular.module('schoolManage')
         function (rooms, RoomDataProvider, $scope, AuthService, $location) {
             $scope.rooms = rooms;
             var me = AuthService.me;
+            $scope.selectedRoom = [];
 
 
 
@@ -18,7 +19,7 @@ angular.module('schoolManage')
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                 ],
-                selectedItems: []
+                selectedItems: $scope.selectedRoom
                 //plugins: [new ngGridFlexibleHeightPlugin()]
 
             };
@@ -42,7 +43,7 @@ angular.module('schoolManage')
                     "school": me.school,
                     "callBack": function (err, room) {
                         if (err) {
-                            alert('创建失败，可能由于用户已存在。');
+                            alert('创建失败，可能由于班级名已存在。');
                             return;
                         }
                         rooms.push(room);
@@ -56,7 +57,7 @@ angular.module('schoolManage')
 
             $scope.selectRoom = function () {
                 //console.log($scope.selectedItem);
-                $location.path('/classes/' + $scope.gridOptions.selectedItem);
+                $location.path('/classes/' + $scope.gridOptions.selectedItems[0]._id);
             };
 
 

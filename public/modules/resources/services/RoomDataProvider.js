@@ -17,12 +17,12 @@ angular.module('schoolManage')
             });
         };
 
-        var getRoom = function () {
+        var getRoom = function (roomId) {
             var defered = $q.defer();
             var roomPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + $route.current.params.roomId
+                url: "/rooms/" + roomId
             }).success(function (room) {
                 defered.resolve(room);
             }).error(function (err) {
@@ -30,16 +30,16 @@ angular.module('schoolManage')
             });
             return roomPromise;
         };
-        var getRoomFull = function () {
+        var getRoomFull = function (roomId) {
             var defered = $q.defer();
             var roomPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + $route.current.params.roomId + "&populate=teachers,students"
+                url: "/rooms/" + roomId + "&populate=teachers.teacher,students"
             }).success(function (room) {
                 defered.resolve(room);
             }).error(function (err) {
-                console.error(err);
+                defered.reject(err);
             });
             return roomPromise;
         };

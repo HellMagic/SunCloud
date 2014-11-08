@@ -1,16 +1,6 @@
 angular.module('myClasses')
-    .factory('ClassDataProvider', ['$http', '$q', '$route', '$location', function ($http, $q, $route, $location, $rootScope) {
+    .factory('ClassDataProvider', ['$http', '$q', '$route', '$location', function ($http, $q, $route, $location) {
         var myClasses = undefined;
-
-        //var me = {};
-        //$.ajax({
-        //    url: "/me",
-        //    async: false,
-        //    success: function (json) {
-        //        me = json;
-        //    },
-        //    dataType: "json"
-        //});
 
         var getClassesByTeacher = function (teacherId, callBack) {
             var defered = $q.defer();
@@ -22,28 +12,6 @@ angular.module('myClasses')
                 myClasses = rooms;
                 for(var classIndex = 0; classIndex < rooms.length; classIndex++){
                     rooms[classIndex].mySubject = $.grep(rooms[classIndex].teachers, function(e){ return e.teacher == teacherId; })[0].subject;
-                }
-
-                if (callBack !== undefined) {
-                    callBack(rooms);
-                }
-                defered.resolve(rooms);
-            }).error(function (err) {
-            });
-            return classesPromise;
-        };
-
-        var getMyClasses = function (callBack) {
-            var defered = $q.defer();
-            var classesPromise = defered.promise;
-            //UserDataProvider.getMe()
-            $http({
-                method: "GET",
-                url: "/rooms?query={\"teachers.teacher\":\"" + me._id + "\"}"
-            }).success(function (rooms) {
-                myClasses = rooms;
-                for(var classIndex = 0; classIndex < rooms.length; classIndex++){
-                    rooms[classIndex].mySubject = $.grep(rooms[classIndex].teachers, function(e){ return e.teacher == me._id; })[0].subject;
                 }
 
                 if (callBack !== undefined) {
@@ -173,7 +141,7 @@ angular.module('myClasses')
                 }
                 console.log('world2');
 
-                //jumpToFirst();
+                jumpToFirst();
                 callBack(oldClass);
             }).error(function(err){
                 console.log(err)
@@ -228,6 +196,7 @@ angular.module('myClasses')
 
         var jumpToFirst = function () {
             if ((myClasses) && (myClasses.length > 0)) {
+                console.log('jump');
                 $location.path('myclasses/' + myClasses[0]._id);
             } else {
                 $location.path('/');
@@ -237,7 +206,6 @@ angular.module('myClasses')
 
         return {
             getClassesByTeacher: getClassesByTeacher,
-            getMyClasses: getMyClasses,
             getClassesBySchool: getClassesBySchool,
             getAllSubjects: getAllSubjects,
             createClass: createClass,
@@ -245,7 +213,6 @@ angular.module('myClasses')
             disclaimClass: disclaimClass,
             disbandClass: disbandClass,
             getClass: getClass,
-            //getClassMin: getClassMin,
             editClass: editClass,
             jumpToFirst: jumpToFirst
         };

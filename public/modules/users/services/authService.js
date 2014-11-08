@@ -12,8 +12,6 @@ angular.module('myClasses').factory('AuthService', ['$http', function($http){
         },
         dataType: "json"
     });
-    //console.log(me);
-
     return {
         me: me
     }

@@ -29,6 +29,7 @@ angular.module('myClasses')
 
             $scope.$watch('classes', function(newClasses) {
                 if (newClasses) {
+                    console.log('changed!');
                     $scope.classes = newClasses;
                     for (var classIndex = 0; classIndex < $scope.classes.length; classIndex++) {
                         var theClass = $scope.classes[classIndex];
