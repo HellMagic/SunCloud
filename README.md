@@ -13,14 +13,15 @@ Run the back-end of SunLauncher and SunPack on cloud.
 Clone this Repo :
 
 ```
-~$ git clone https://github.com/guanghetv/x-mothership.git
+~$ git clone https://github.com/summer-liu/SunCloud.git
 ```
 
-Install npm package:
+Install npm package and bower lib:
 
 ```
 ~$ cd SunCloud
 ~$ npm install
+~$ bower install
 ```
 
 prepare your mongodb <http://docs.mongodb.org/> .
