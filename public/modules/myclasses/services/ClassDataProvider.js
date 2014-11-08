@@ -1,16 +1,37 @@
 angular.module('myClasses')
-    .factory('ClassDataProvider', ['$http', '$q', '$route', '$location', function ($http, $q, $route, $location) {
+    .factory('ClassDataProvider', ['$http', '$q', '$route', '$location', function ($http, $q, $route, $location, $rootScope) {
         var myClasses = undefined;
 
-        var me = {};
-        $.ajax({
-            url: "/me",
-            async: false,
-            success: function (json) {
-                me = json;
-            },
-            dataType: "json"
-        });
+        //var me = {};
+        //$.ajax({
+        //    url: "/me",
+        //    async: false,
+        //    success: function (json) {
+        //        me = json;
+        //    },
+        //    dataType: "json"
+        //});
+
+        var getClassesByTeacher = function (teacherId, callBack) {
+            var defered = $q.defer();
+            var classesPromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?query={\"teachers.teacher\":\"" + teacherId + "\"}"
+            }).success(function (rooms) {
+                myClasses = rooms;
+                for(var classIndex = 0; classIndex < rooms.length; classIndex++){
+                    rooms[classIndex].mySubject = $.grep(rooms[classIndex].teachers, function(e){ return e.teacher == teacherId; })[0].subject;
+                }
+
+                if (callBack !== undefined) {
+                    callBack(rooms);
+                }
+                defered.resolve(rooms);
+            }).error(function (err) {
+            });
+            return classesPromise;
+        };
 
         var getMyClasses = function (callBack) {
             var defered = $q.defer();
@@ -29,27 +50,17 @@ angular.module('myClasses')
                     callBack(rooms);
                 }
                 defered.resolve(rooms);
-                if (
-                    ($route.current === undefined) ||
-                    ($route.current.params === undefined) ||
-                    ($route.current.params.classId === undefined) ||
-                    ($route.current.params.classId.length !== 24) ||
-                    (myClasses.length === 0)
-                ) {
-                    //jumpToFirst();
-                } else {
-                }
             }).error(function (err) {
             });
             return classesPromise;
         };
 
-        var getAllClasses = function(callBack) {
+        var getClassesBySchool = function(schoolId, callBack) {
             var defered = $q.defer();
             var classListPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + me.school
+                url: "/rooms?school=" + schoolId
             }).success(function(classList){
                 callBack(classList);
                 defered.resolve(classList);
@@ -92,34 +103,42 @@ angular.module('myClasses')
             return classPromise;
         };
 
-        var createClass = function (name, callBack) {
+        var createClass = function (name, teacher, callBack) {
             $http({
                 method: "POST",
                 url: "/rooms",
                 data: {
                     "name": name,
-                    "school": me.school,
-                    "teachers": [{teacher: me._id}]
+                    "school": teacher.school,
+                    "teachers": [{teacher: teacher._id}]
                 }
             }).success(function (newClass) {
                 myClasses.push(newClass);
                 $location.path('myclasses/' + newClass._id);
                 callBack(newClass);
             }).error(function (err) {
+                console.error(err);
             });
         };
 
-        var claimClass = function(classId, subjectId, callBack) {
+        var claimClass = function(classId, subjectId, teacherId, callBack) {
+            var teachers= classId.teachers;
+
+            if(_.filter(teachers, function(teacherObj){
+                    return teacherObj.teacher === teacherId
+                }).length){
+                            alert('该班级已在您的列表中');
+                            return;
+            }else{
+                teachers.push({teacher: teacherId, subject: [subjectId.name]})
+            }
+
             $http({
                 method: "PUT",
                 url: "/rooms/" + classId._id,
                 data:{
-                    //"teachers" : [{"teacher": me._id, "subject": subjectId._id}]
-                    $push: {"teachers":{"teacher": me._id, $push:{"subject": subjectId.name}}}
+                    teachers: teachers
                 }
-            //{$push: {"teachers": {"teacher": me._id}}}
-                    //"teachers" : [{"subject": subjectId._id, "teacher": me._id} ]
-                    //"teachers":{$push: {$push:{"subject": subjectId._id}, "teacher": me._id}}
 
             }).success(function (newClass){
                 myClasses.push(newClass);
@@ -130,6 +149,37 @@ angular.module('myClasses')
                 console.log(err)
             })
         };
+
+        var disclaimClass = function(classId, teacherId, callBack) {
+            var teachers = _.filter(classId.teachers, function(teacherObj){
+                return teacherObj.teacher !== teacherId;
+            });
+            console.log(teacherId);
+            console.log(teachers);
+            console.log('world');
+
+            $http({
+                method: "PUT",
+                url: "/rooms/" + classId._id,
+                data:{
+                    teachers: teachers
+                }
+            }).success(function (oldClass){
+                for (var classIndex = 0; classIndex < myClasses.length; classIndex++) {
+                    if (myClasses[classIndex]._id === classId._id) {
+                        myClasses.splice(classIndex, 1);
+                        break;
+                    }
+                }
+                console.log('world2');
+
+                //jumpToFirst();
+                callBack(oldClass);
+            }).error(function(err){
+                console.log(err)
+            })
+        };
+
 
         var disbandClass = function (classId, callBack) {
             $http({
@@ -150,6 +200,8 @@ angular.module('myClasses')
 //                }
             });
         };
+
+
 
         var editClass = function (editedClass, classId, callBack) {
             $http({
@@ -184,11 +236,13 @@ angular.module('myClasses')
 
 
         return {
+            getClassesByTeacher: getClassesByTeacher,
             getMyClasses: getMyClasses,
-            getAllClasses: getAllClasses,
+            getClassesBySchool: getClassesBySchool,
             getAllSubjects: getAllSubjects,
             createClass: createClass,
             claimClass: claimClass,
+            disclaimClass: disclaimClass,
             disbandClass: disbandClass,
             getClass: getClass,
             //getClassMin: getClassMin,

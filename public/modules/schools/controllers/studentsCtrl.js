@@ -1,7 +1,7 @@
-angular.module('schoolManage')
-    .controller('studentsController',
-    ['students', 'StudentDataProvider', '$scope', 'count',
-        function (students, StudentDataProvider, $scope, count) {
+angular.module('schools')
+    .controller('studentsRootController',
+    ['students', 'StudentDataProvider', '$scope',
+        function (students, StudentDataProvider, $scope) {
         $scope.students = students;
         $scope.studentsGrid = [];
 

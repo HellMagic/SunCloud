@@ -1,5 +1,5 @@
-angular.module('schoolManage')
-    .controller('tabletsController',
+angular.module('schools')
+    .controller('tabletsRootController',
     ['tablets', 'TabletDataProvider', '$scope',
         function (tablets, TabletDataProvider, $scope) {
             $scope.tablets = tablets;

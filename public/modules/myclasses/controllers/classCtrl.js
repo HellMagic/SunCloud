@@ -1,10 +1,13 @@
 'use strict';
 
 angular.module('myClasses').controller('classController',
-    ['$scope', '$stateParams', '$location', 'Authentication','ClassDataProvider', 'UserDataProvider','$http','DataAgent',
-    function($scope, $stateParams, $location, Authentication, ClassDataProvider, UserDataProvider, $http,DataAgent) {
+    ['$scope', '$stateParams', '$location', 'Authentication','ClassDataProvider', 'UserDataProvider','$http','DataAgent', 'AuthService', '$state',
+    function($scope, $stateParams, $location, Authentication, ClassDataProvider, UserDataProvider, $http,DataAgent, AuthService, $state) {
         $scope.authentication = Authentication;
         $scope.isEditClassName = false;
+        $scope.addState = true;
+        $scope.addBatchState = false;
+        var me = AuthService.me;
 
         ClassDataProvider.getClass($stateParams.classId,function(theClass){
             $scope.theClass = theClass;
@@ -14,9 +17,7 @@ angular.module('myClasses').controller('classController',
                 }
                 return a.username.localeCompare(b.username);
             });
-
             $scope.noTabletNum = 0;
-
             _.each($scope.theClass.students, function(studentItem) {
 
                 UserDataProvider.getTablet(studentItem._id,function(record){
@@ -52,21 +53,23 @@ angular.module('myClasses').controller('classController',
 
         $scope.showJoinStudentDialog = function() {
             $('#joinStudentDialog').modal('show');
+            //$scope.toAddStudents = true;
         };
 
         $scope.showLogoutDialog = function(row) {
             $('#logoutDialog').modal('show');
             $scope.row = row;
-        }
+        };
 
 
-        $scope.disbandClass = function() {
-            ClassDataProvider.disbandClass($scope.theClass._id, function(oldClass) {
-                DataAgent.prepForBroadcast('disbandClass', oldClass);
+        $scope.disclaimClass = function() {
+            ClassDataProvider.disclaimClass($scope.theClass, me._id, function(oldClass) {
+                console.log('hello');
+                DataAgent.prepForBroadcast('disclaimClass', oldClass);
                 ClassDataProvider.jumpToFirst();
                 $('#disbandClassDialog').modal('hide');
                 $('.modal-backdrop').remove();
-                $scope.reload();
+                $state.reload();
             });
         };
 
@@ -87,10 +90,18 @@ angular.module('myClasses').controller('classController',
             ClassDataProvider.editClass({
                 name: $scope.theClass.name
             }, $stateParams.classId,function(newClassMin) {
-                //console.log('put修改服务端class name success，the new name='+newClassMin.name);
             });
         };
 
+        $scope.addStudents = function() {
+            $scope.addState = true;
+            $scope.addBatchState = false;
+        };
+
+        $scope.addStudentsBatch = function() {
+            $scope.addState = false;
+            $scope.addBatchState = true;
+        };
 
 
 
@@ -100,17 +111,13 @@ angular.module('myClasses').controller('classController',
             showFilter: false,
             multiSelect: false,
             columnDefs: [
-                {field: 'username', displayName: '学生', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
+                {field: 'username', displayName: '用户名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
+                {field: 'name', displayName: '姓名'},
                 {field: 'birthday', displayName: '生日'},
                 {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'loginTime', displayName: '上次登录时间'},
                 {field: 'tablet', displayName: '', cellTemplate:'<button type="button" style="align-items: center" class="btn btn-default btn-sm" ng-click="showLogoutDialog(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
-
             ]
         };
-
-
-
-
     }
 ]);

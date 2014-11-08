@@ -6,15 +6,18 @@ angular.module('myClasses')
         'UserDataProvider',
         '$route',
         '$location',
-        '$routeParams',
-        function($scope, ClassDataProvider, DataAgent, UserDataProvider, $route, $location, $routeParams) {
+        'AuthService',
+        function($scope, ClassDataProvider, DataAgent, UserDataProvider, $route, $location, AuthService) {
             $scope.temp = {};
 
-            ClassDataProvider.getMyClasses(function(classes) {
+            var me = AuthService.me;
+            //console.log(me);
+
+            ClassDataProvider.getClassesByTeacher(me._id, function(classes) {
                 $scope.classes = classes;
             });
 
-            ClassDataProvider.getAllClasses(function(classes){
+            ClassDataProvider.getClassesBySchool(me.school, function(classes){
                 $scope.classList = classes;
                 $scope.selectedClass = $scope.classList[0];
             });
@@ -74,7 +77,7 @@ angular.module('myClasses')
                     }
                 }
                 $('#showTip_classCreate').modal('hide');
-                ClassDataProvider.createClass($scope.newClassName.trim(), function(newClass) {
+                ClassDataProvider.createClass($scope.newClassName.trim(), me, function(newClass) {
                     var classes = $scope.classes;
                     var found = false;
                     for (var classIndex = 0; classIndex < classes.length; classIndex++) {
@@ -99,7 +102,7 @@ angular.module('myClasses')
 
             $scope.claimClass = function() {
                 $('#showTip_classClaim').modal('hide');
-                ClassDataProvider.claimClass($scope.selectedClass,$scope.selectedSubject,function(newClass){
+                ClassDataProvider.claimClass($scope.selectedClass,$scope.selectedSubject, me._id,function(newClass){
 
                 })
             };

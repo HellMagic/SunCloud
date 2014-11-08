@@ -118,7 +118,7 @@ angular.module('myClasses')
 
             var sendPostJoinUsers = function(users, classNum) {
                 return $http.post('/join/students', {users: users, classNum: classNum});
-            }
+            };
 
             var autoCreateStudents = function(users_count, class_number) {
                 var usernames = getStudentsId(users_count, class_number);

@@ -1,21 +1,22 @@
 angular.module('schoolManage')
     .factory('RoomDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
-        var createRoom = function (name, callBack) {
+        var createRoom = function (info) {
             $http({
                 method: "POST",
                 url: "/rooms",
                 data: {
-                    "name": name,
-                    "school": $route.current.params.schoolId,
+                    "name": info.name,
+                    "school": info.school,
                     "students": [],
                     "teachers": [{}]
                 }
             }).success(function (room) {
-                callBack(room);
+                info.callBack(undefined, room);
             }).error(function (err) {
-                console.error(err);
+                info.callBack(err);
             });
         };
+
         var getRoom = function () {
             var defered = $q.defer();
             var roomPromise = defered.promise;
@@ -42,12 +43,12 @@ angular.module('schoolManage')
             });
             return roomPromise;
         };
-        var getRoomsBySchool = function () {
+        var getRoomsBySchool = function (schoolId) {
             var defered = $q.defer();
             var roomPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/?school=" + $route.current.params.schoolId + "&populate=teachers"
+                url: "/rooms?school=" + schoolId + "&populate=teachers.teacher"
             }).success(function (rooms) {
                 defered.resolve(rooms);
             }).error(function (err) {

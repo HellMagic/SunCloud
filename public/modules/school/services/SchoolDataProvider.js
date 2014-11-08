@@ -1,5 +1,6 @@
 angular.module('schoolManage')
     .factory('SchoolDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
+
         var createSchool = function (name, callBack) {
             $http({
                 method: "POST",
@@ -13,13 +14,16 @@ angular.module('schoolManage')
                 console.error(err)
             });
         };
-        var getSchool = function () {
+        var getSchool = function (schoolId, callBack) {
             var defered = $q.defer();
             var schoolPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/schools/" + $route.current.params.schoolId
+                url: "/schools/" + schoolId
             }).success(function (school) {
+                if(callBack){
+                    callBack(school);
+                }
                 defered.resolve(school);
             }).error(function (err) {
                 console.error(err)
@@ -30,7 +34,7 @@ angular.module('schoolManage')
             delete school.rooms;
             $http({
                 method: "PUT",
-                url: "/schools/" + $route.current.params.schoolId,
+                url: "/schools/" + school._id,
                 data: school
             }).success(function (school) {
                 callBack(school);

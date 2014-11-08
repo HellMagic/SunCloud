@@ -1,24 +1,42 @@
 angular.module('schoolManage')
-    .factory('TeacherDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
-
-        var me = {};
-        var getMe = function (callBack) {
-            var deferred = $q.defer();
-            var userPromise = deferred.promise;
-
-            $http.get('/me')
-                .success(function (user) {
-                    callBack(user);
-                    deferred.resolve(user);
-                    me = user;
-                })
-                .error(function (err) {
-                    deferred.reject('Fetch User Error: ' + err);
-                });
-            return userPromise;
-        };
+    .factory('TeacherDataProvider', ['$http', '$q', '$route',function ($http, $q, $route) {
 
 
+        //var getMe = function (callBack) {
+        //    var deferred = $q.defer();
+        //    var userPromise = deferred.promise;
+        //
+        //    $http.get('/me')
+        //        .success(function (user) {
+        //            callBack(user);
+        //            deferred.resolve(user);
+        //            me = user;
+        //        })
+        //        .error(function (err) {
+        //            deferred.reject('Fetch User Error: ' + err);
+        //        });
+        //    return userPromise;
+        //};
+        //
+        //var getMySchool = function (callBack) {
+        //
+        //        var defered = $q.defer();
+        //        var schoolPromise = defered.promise;
+        //        $http({
+        //            method: "GET",
+        //            url: "/schools/" + me.school
+        //        }).success(function (school) {
+        //            if(callBack){
+        //                callBack(school);
+        //            }
+        //            defered.resolve(school);
+        //        }).error(function (err) {
+        //            console.error(err)
+        //        });
+        //        return schoolPromise;
+        //
+        //
+        //};
 
 
 
@@ -30,7 +48,9 @@ angular.module('schoolManage')
                 url: "/users?roles=teacher&school=" + schoolId
             }).success(function(teachers) {
                 defered.resolve(teachers);
-                callBack(teachers);
+                if(callBack) {
+                    callBack(teachers);
+                }
             }).error(function (err) {
                 console.error(err);
             });
@@ -48,7 +68,7 @@ angular.module('schoolManage')
             });
         };
 
-        var createTeacher = function (info) {//password will be the same as username!
+        var createTeacher = function (info) {
             $http({
                 method: "POST",
                 url: "/users",
@@ -56,17 +76,13 @@ angular.module('schoolManage')
                     "name": info.name,
                     "username": info.username,
                     "roles": ["teacher"],
-                    "password": info.username,
-                    "remark": info.remark
+                    "school": info.school,
+                    "password": "xiaoshu"
                 }
             }).success(function (teacher) {
                 info.callBack(undefined, teacher);
             }).error(function (err) {
-                if (err.message === 'Username already exists') {
-                    info.callBack('Username already exists');
-                } else {
-                    ohNo(err);
-                }
+                info.callBack('Username already exists');
             });
         };
         var getTeacher = function () {
@@ -85,26 +101,27 @@ angular.module('schoolManage')
         var editTeacher = function (teacher, callBack) {
             $http({
                 method: "PUT",
-                url: "/users/" + $route.current.params.teacherId,
+                url: "/users/" + teacher._id,
                 data: teacher
             }).success(function (teacher) {
-                callBack(teacher);
+                callBack(undefined,teacher);
             }).error(function (err) {
-                ohNo(err);
+                callBack(err);
             });
         };
-        var removeTeacher = function (callBack) {
+        var removeTeacher = function (teacherId, callBack) {
             $http({
                 method: "DELETE",
-                url: "/users/" + $route.current.params.teacherId
+                url: "/users/" + teacherId
             }).success(function (teacher) {
-                callBack(teacher);
+                callBack(undefined, teacher);
             }).error(function (err) {
-                ohNo(err);
+                callBack(err);
             });
         };
         return {
-            getMe: getMe,
+            //getMe: getMe,
+            //getMySchool: getMySchool,
             getTeachersBySchool: getTeachersBySchool,
             getCountsOfTeachersBySchool: getCountsOfTeachersBySchool,
             createTeacher: createTeacher,

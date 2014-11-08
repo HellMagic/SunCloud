@@ -1,0 +1,14 @@
+<div class="container-fluid">
+
+    <form class="form-inline pull-right">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="新班级名称" ng-model="newRoom.name">
+        </div>
+        <button class="btn btn-primary fui-plus" ng-click="createRoom()">新建班级</button>
+    </form>
+
+    <p class="tableTitle">所有班级</p>
+    <div class="table">
+        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectRoom()"></div>
+    </div>
+</div>

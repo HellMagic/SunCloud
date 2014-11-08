@@ -21,7 +21,6 @@ angular.module('schoolManage')
             $scope.selectedState = $scope.items[0].state;
             $scope.goto = function(state) {
                 $scope.selectedState = state;
-                console.log($scope.selectedState);
                 $state.transitionTo(state);
             };
         }

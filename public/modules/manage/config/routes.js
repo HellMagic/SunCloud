@@ -8,7 +8,32 @@ angular.module('manage').config(['$stateProvider',
         $stateProvider.
             state('deviceManage', {
                 url: '/manage',
-                templateUrl: __templates + 'manage.html'
+                controller: 'manageNavController',
+                templateUrl: __templates + 'manageNav.html'
+            }).
+            state('myDevice', {
+                //url: '/manage',
+                parent: 'deviceManage',
+                controller: 'myDeviceController',
+                templateUrl: __templates + 'myDevice.html'
+            }).
+            state('appsManage', {
+                //url: '/manage',
+                parent: 'deviceManage',
+                controller: 'appsManageController',
+                templateUrl: __templates + 'appsManage.html'
+            }).
+            state('lockView', {
+                //url: '/manage',
+                parent: 'deviceManage',
+                controller: 'lockViewController',
+                templateUrl: __templates + 'lockView.html'
+            }).
+            state('mySetting', {
+                //url: '/manage',
+                parent: 'deviceManage',
+                controller: 'mySettingController',
+                templateUrl: __templates + 'mySetting.html'
             });
     }
 ]);

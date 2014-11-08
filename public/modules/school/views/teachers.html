@@ -1,3 +1,65 @@
-<div>
-    <h2>Hello teacher</h2>
+<div class="container-fluid">
+    <form class="form-inline pull-right">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="新老师姓名" ng-model="newTeacher.name">
+            <input type="text" class="form-control" placeholder="新老师用户名" ng-model="newTeacher.username">
+        </div>
+        <button class="btn btn-primary fui-plus" ng-click="createTeacher()">添加老师</button>
+    </form>
+    <p class="tableTitle">所有老师</p>
+    <div class="table">
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+
+
+
+    <div class="modal fade" id="removeTeacherDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">删除老师</h4>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要将老师{{row.entity.name}}删除吗？
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="removeTeacher(row)">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editTeacherDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">编辑老师</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-inline">
+                            <label for="newName">新姓名</label>
+                            <input type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName">
+                        </div>
+
+                        <br>
+                        <br>
+                        <br>
+                        <div class="form-inline">
+                            <label for="newUsername">新用户名</label>
+                            <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername">
+                        </div>
+                    </div>
+                    <span style="color: red" ng-show="temp.error">修改失败，可能由于用户名已存在</span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="editTeacher(row)">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

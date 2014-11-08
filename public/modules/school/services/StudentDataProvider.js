@@ -9,7 +9,9 @@ angular.module('schoolManage')
                 url: "/users?roles=student&school=" + schoolId
             }).success(function(students){
                 defered.resolve(students);
-                callBack(students);
+                if(callBack){
+                    callBack(students);
+                }
             }).error(function(err) {
                 console.error(err);
             });
@@ -28,23 +30,20 @@ angular.module('schoolManage')
             })
         };
 
-        var createStudent = function (info) {//password will be the same as username!
+        var createStudent = function (info) {
             $http({
                 method: "POST",
                 url: "/users",
                 data: {
                     "name": info.name,
                     "username": info.username,
+                    "school": info.school,
                     "roles": ["student"]
                 }
             }).success(function (student) {
                 info.callBack(undefined,student);
             }).error(function (err) {
-                if (err.message === 'Username already exists') {
                     info.callBack('Username already exists');
-                } else {
-                    console.error(err);
-                }
             });
         };
         /**
@@ -67,18 +66,18 @@ angular.module('schoolManage')
         var editStudent = function (student, callBack) {
             $http({
                 method: "PUT",
-                url: "/users/" + $route.current.params.studentId,
+                url: "/users/" + student._id,
                 data: student
             }).success(function (student) {
-                callBack(student);
+                callBack(undefined, student);
             }).error(function (err) {
-                console.error(err);
+                callBack(err);
             });
         };
-        var removeStudent = function (callBack) {
+        var removeStudent = function (studentId, callBack) {
             $http({
                 method: "DELETE",
-                url: "/users/" + $route.current.params.studentId
+                url: "/users/" + studentId
             }).success(function (student) {
                 callBack(student);
             }).error(function (err) {

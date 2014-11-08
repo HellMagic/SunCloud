@@ -41,13 +41,16 @@ module.exports = function(app) {
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
 
+	//app.post('/users', user.requiresLogin, users.create);
+
+
 
 
 	var userOptions = {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
+		//middleware: [users.restify],
 		findOneAndUpdate: false
 	};
 

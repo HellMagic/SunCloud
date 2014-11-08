@@ -26,17 +26,12 @@ angular.module('schools').config(['$stateProvider',
             state('studentsAll',{
                 //url: '/:classId',
                 parent: 'schoolsNav',
-                controller: 'studentsController',
+                controller: 'studentsRootController',
                 templateUrl: __templates + 'students.html',
                 resolve: {
                     students: ['RootDataProvider',
                         function(RootDataProvider) {
                             return RootDataProvider.getAllStudents();
-                        }
-                    ],
-                    count: ['RootDataProvider',
-                        function(RootDataProvider) {
-                            return RootDataProvider.getAllStudentsCount();
                         }
                     ]
                 }
@@ -44,7 +39,7 @@ angular.module('schools').config(['$stateProvider',
             state('teachersAll',{
                 //url: '/tablets/:tabletId',
                 parent: 'schoolsNav',
-                controller: 'teachersController',
+                controller: 'teachersRootController',
                 templateUrl: __templates + 'teachers.html',
                 resolve: {
                     teachers: ['RootDataProvider',
@@ -57,7 +52,7 @@ angular.module('schools').config(['$stateProvider',
             state('classesAll',{
                 //url: '',
                 parent: 'schoolsNav',
-                controller: 'classesController',
+                controller: 'classesRootController',
                 templateUrl: __templates + 'classes.html',
                 resolve: {
                     rooms: ['RootDataProvider',
@@ -70,7 +65,7 @@ angular.module('schools').config(['$stateProvider',
             state('tabletsAll',{
                 //url: '/students/:studentId',
                 parent: 'schoolsNav',
-                controller: 'tabletsController',
+                controller: 'tabletsRootController',
                 templateUrl: __templates + 'tablets.html',
                 resolve: {
                     tablets: ['RootDataProvider',
@@ -84,19 +79,19 @@ angular.module('schools').config(['$stateProvider',
             state('appsAll',{
                 //url: '',
                 parent: 'schoolsNav',
-                controller: 'appsController',
+                controller: 'appsRootController',
                 templateUrl: __templates + 'apps.html'
             }).
             state('templateAll',{
                 //url: '',
                 parent: 'schoolsNav',
-                controller: 'templateController',
+                controller: 'templateRootController',
                 templateUrl: __templates + 'template.html'
             }).
             state('settingAll', {
                 //url: '',
                 parent: 'schoolsNav',
-                controller: 'settingController',
+                controller: 'settingRootController',
                 templateUrl: __templates + 'setting.html'
             })
         ;

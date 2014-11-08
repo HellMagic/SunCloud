@@ -5,7 +5,12 @@
             <input style="color:black " type="text" ng-if="isEditClassName" ng-model="theClass.name" ng-blur="editClassNameOver()">
             <!--&nbsp &nbsp<span class="glyphicon glyphicon-edit" data-tooltip-style="light" data-toggle="tooltip" data-placement="right" title="修改班名"-->
                              <!--ng-click="editClassName()" href=""></span>-->
+
         </h4>
+                    <span ng-repeat="subject in theClass.mySubject">
+                <span class="badge pull-right">{{subject}}</span>
+            </span>
+
 
 
         <!--<button type="button" class="btn btn-default btn-xs">-->
@@ -37,7 +42,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                    <button class="btn btn-success" ng-click="disbandClass()">解散</button>
+                    <button class="btn btn-success" ng-click="disclaimClass()">解散</button>
                 </div>
             </div>
         </div>
@@ -51,18 +56,57 @@
                     <h4 class="modal-title">添加学生</h4>
                 </div>
                 <div class="modal-body">
-                    <form name="addStudentForm" novalidation ng-submit="joinStudent(addStudentForm)">
-                        <div class="form-group">
+                    <ul class="nav nav-pills nav-justified">
+                        <li ng-class="{'active': addState}"><a ng-click="addStudents()">添加学生</a></li>
+                        <li ng-class="{'active': addBatchState}"><a ng-click="addStudentsBatch()">批量操作</a></li>
+                    </ul>
 
 
+                    <div ng-if="addState" class="col-md-12">
+                        <br>
+                        <input type="text" class="form-control" placeholder="请输入学生用户名" ng-model="temp.students_count" >
+                        <span style="color: red" ng-show="temp.student_count_NaN">请输入一个正确的数字</span>
+                        <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
+                        <br>
+                    </div>
+
+
+                    <div ng-if="addBatchState" class="col-md-12">
+                        <div text-indent="50px">
+                            <br>
+                            <p style="text-indent: 180px">批量创建学生并添加至这个班级，</p>
+
+                            <p style="text-indent: 180px">如果学生已存在，则直接加入本班级，</p>
+
+                            <p style="text-indent: 180px">每行一个学生，请按照</p>
+
+                            <p style="color: orangered; font-weight: bold; text-indent: 180px">&nbsp;&nbsp;姓名，用户名</p>
+
+                            <p style="text-indent: 180px">格式输入：</p>
                         </div>
 
-                        <button type="submit" class="btn btn-success btn-block">添加学生</button>
-                    </form>
+                        <textarea ng-model="newStudentsList" class="form-control"></textarea>
+
+                        <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
+                        <br>
+                    </div>
+
+                    <button type="submit" class="btn btn-default btn-success btn-block">确定</button>
+
+
                 </div>
+
+
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
 
     <div class="modal fade" id="logoutDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class='modal-dialog'>

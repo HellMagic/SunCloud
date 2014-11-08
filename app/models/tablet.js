@@ -15,6 +15,10 @@ var TabletSchema = new Schema({
         type: String,
         required: true
     },
+    school: {
+        type: Schema.Types.ObjectId,
+        ref: 'School'
+    },
     OS_type: String,
     OS_version: String,
     user: {

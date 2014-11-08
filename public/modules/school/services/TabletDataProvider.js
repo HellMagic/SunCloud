@@ -11,8 +11,26 @@ angular.module('schoolManage')
             });
         };
 
+        var getTabletsBySchool = function(schoolId, callBack) {
+            var defered = $q.defer();
+            var tabletsBySchoolPromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/tablets?school=" + schoolId
+            }).success(function(tablets) {
+                defered.resolve(tablets);
+                if(callBack) {
+                    callBack(tablets);
+                }
+            }).error(function (err) {
+                console.error(err);
+            });
+            return tabletsBySchoolPromise;
+        };
+
         return {
-            getXiaoshuBySchool: getXiaoshuBySchool
+            getXiaoshuBySchool: getXiaoshuBySchool,
+            getTabletsBySchool: getTabletsBySchool
 
         };
     }]);

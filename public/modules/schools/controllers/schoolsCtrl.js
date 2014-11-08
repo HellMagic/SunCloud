@@ -9,14 +9,13 @@ angular.module('schools')
         'TabletDataProvider',
         'RootDataProvider',
         '$scope',
+        'AuthService',
         function
-            (schools, SchoolDataProvider, TeacherDataProvider,RoomDataProvider,StudentDataProvider, TabletDataProvider,RootDataProvider,$scope) {
+            (schools, SchoolDataProvider, TeacherDataProvider,RoomDataProvider,StudentDataProvider, TabletDataProvider,RootDataProvider,$scope, AuthService) {
 
             $scope.schools = schools;
 
-            TeacherDataProvider.getMe(function(user){
-                $scope.me = user;
-            });
+            $scope.me = AuthService.me;
 
             RootDataProvider.getAllSchoolsCount(function(counts){
                 $scope.schoolCount = counts.count;

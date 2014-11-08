@@ -1,5 +1,5 @@
-angular.module('schoolManage')
-    .controller('classesController',
+angular.module('schools')
+    .controller('classesRootController',
     ['rooms', 'RoomDataProvider', '$scope',
         function (rooms, TeacherDataProvider, $scope) {
             $scope.rooms = rooms;
@@ -16,7 +16,8 @@ angular.module('schoolManage')
                     {field: 'school.name', displayName: '学校'},
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
-                ]
+                ],
+                selectedItems: []
             };
 
 

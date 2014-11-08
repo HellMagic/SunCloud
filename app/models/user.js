@@ -43,7 +43,7 @@ var UserSchema = new Schema({
 	},
 	password: {
 		type: String,
-		default: '',
+		default: 'xiaoshu',
 		validate: [validateLocalStrategyPassword, '密码太短啦']
 	},
 	salt: {
@@ -62,7 +62,8 @@ var UserSchema = new Schema({
 		type: [{
 			type: String,
 			enum: ['student','teacher', 'admin','root']
-		}]
+		}],
+		default:[]
 	},
 	updated: {
 		type: Date
