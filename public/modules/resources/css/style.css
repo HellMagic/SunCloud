@@ -1,0 +1,15 @@
+.navbar-text.watermark {
+    color: deepskyblue;
+}
+
+.room-header {
+    margin-top: 10px;
+    background: darkgreen;
+    border-radius: 6px;
+    /*height: 50px;*/
+
+}
+
+/*.roomView {*/
+    /*margin-top: 100px;*/
+/*}*/

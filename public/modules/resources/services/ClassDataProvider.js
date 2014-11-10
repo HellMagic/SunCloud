@@ -196,7 +196,9 @@ angular.module('myClasses')
 
         var jumpToFirst = function () {
             if ((myClasses) && (myClasses.length > 0)) {
-                console.log('jump');
+                //$location.path('myclasses/' + myClasses[0]._id)
+                // ;
+
                 $location.path('myclasses/' + myClasses[0]._id);
             } else {
                 $location.path('/');

@@ -17,7 +17,7 @@ angular.module('schoolManage')
             });
         };
 
-        var getRoom = function (roomId) {
+        var getRoom = function (roomId, callBack) {
             var defered = $q.defer();
             var roomPromise = defered.promise;
             $http({
@@ -25,6 +25,9 @@ angular.module('schoolManage')
                 url: "/rooms/" + roomId
             }).success(function (room) {
                 defered.resolve(room);
+                if(callBack){
+                    callBack(room);
+                }
             }).error(function (err) {
                 console.error(err);
             });
@@ -35,7 +38,7 @@ angular.module('schoolManage')
             var roomPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "&populate=teachers.teacher,students"
+                url: "/rooms/" + roomId + "?populate=teachers.teacher,students"
             }).success(function (room) {
                 defered.resolve(room);
             }).error(function (err) {
@@ -92,7 +95,7 @@ angular.module('schoolManage')
         var editRoom = function (room, callBack) {
             $http({
                 method: "PUT",
-                url: "/rooms/" + $route.current.params.roomId,
+                url: "/rooms/" + room._id,
                 data: room
             }).success(function (room) {
                 callBack(room);
@@ -100,15 +103,75 @@ angular.module('schoolManage')
                 console.error(err);
             });
         };
-        var deleteRoom = function (callBack) {
+        var deleteRoom = function (roomId, callBack) {
             $http({
                 method: "DELETE",
-                url: "/rooms/" + $route.current.params.roomId
+                url: "/rooms/" + roomId
             }).success(function (room) {
                 callBack(room);
             }).error(function (err) {
                 console.error(err);
             });
+        };
+
+        var removeStudentFromRoom = function (room, studentId, callBack) {
+            console.log(room.students);
+            var students = _.filter(room.students, function(student){
+                return student !== studentId;
+            });
+            $http({
+                method: "PUT",
+                url: "/rooms/" + room._id,
+                data: {
+                    students: students
+                }
+            }).success(function(room) {
+                callBack(room);
+            }).error(function(err) {
+                console.error(err);
+            })
+        };
+
+        var removeTeacherFromRoom = function (room, teacherId, callBack) {
+            var teachers = _.filter(room.teachers, function(teacher){
+                return teacher !== teacherId;
+            });
+            $http({
+                method: "PUT",
+                url: "/rooms/" + room._id,
+                data: {
+                    teachers: teachers
+                }
+            }).success(function(room) {
+                callBack(room);
+            }).error(function(err) {
+                console.error(err);
+            })
+
+        };
+
+        var addStudentsToRoom = function(room, students, callBack) {
+            var studentsNow = room.students;
+            if(studentsNow.length){
+                studentsNow = studentsNow.concat(students);
+            }else{
+                studentsNow = students;
+            }
+            console.log(studentsNow);
+            $http({
+                method: "PUT",
+                url: "/rooms/" + room._id,
+                data: {
+                    "students" : studentsNow
+                }
+            }).success(function(room) {
+                callBack(room);
+            }).error(function(err) {
+                console.error(err);
+            })
+
+
+
         };
         return {
             createRoom: createRoom,
@@ -118,6 +181,9 @@ angular.module('schoolManage')
             getRoomsByUser: getRoomsByUser,
             getCountsOfRoomsBySchool: getCountsOfRoomsBySchool,
             editRoom: editRoom,
-            deleteRoom: deleteRoom
+            deleteRoom: deleteRoom,
+            removeStudentFromRoom: removeStudentFromRoom,
+            removeTeacherFromRoom: removeTeacherFromRoom,
+            addStudentsToRoom: addStudentsToRoom
         };
     }]);

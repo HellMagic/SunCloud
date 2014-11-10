@@ -1,12 +1,14 @@
 angular.module('schoolManage')
     .controller('studentsController',
-    ['students', 'StudentDataProvider', '$scope', 'AuthService', 'UserDataProvider',
-        function (students, StudentDataProvider, $scope, AuthService, UserDataProvider) {
+    ['students', 'StudentDataProvider', '$scope', 'AuthService', 'UserDataProvider', '$location',
+        function (students, StudentDataProvider, $scope, AuthService, UserDataProvider, $location) {
             $scope.students = students;
             var me = AuthService.me;
             $scope.noTabletNum = 0;
             $scope.temp = {};
             $scope.temp.error = false;
+            $scope.selectedStudent = [];
+
 
 
             _.each($scope.students, function(studentItem) {
@@ -40,12 +42,22 @@ angular.module('schoolManage')
                         '<a class="glyphicon glyphicon-remove text-primary" ng-click="showRemoveStudentDialog(row)"></a></div>'}
 
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
-                ]
+                ],
+                selectedItems: $scope.selectedStudent
             };
 
             $scope.showRemoveStudentDialog = function(row) {
                 $('#removeStudentDialog').modal('show');
                 $scope.row = row;
+
+            };
+            $scope.showCreateStudentDialog = function() {
+                $('#createStudentDialog').modal('show');
+
+            };
+
+            $scope.showCreateStudentBatchDialog = function() {
+                $('#createStudentBatchDialog').modal('show');
 
             };
 
@@ -103,18 +115,16 @@ angular.module('schoolManage')
                         }
                         students.push(student);
                         $scope.newStudent = undefined;
+                        $('#createStudentDialog').modal('hide');
                     }
                 });
             };
 
-
-
-            $scope.onDblClickRow = function (rowItem) {
-                var thisUser = rowItem.entity;
-                window.location = '#/student/' + thisUser._id;
+            $scope.selectStudent = function () {
+                //console.log($scope.selectedItem);
+                //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
+                $location.path('/students/' + $scope.gridOptions.selectedItems[0]._id);
             };
-
-
 
 
         }]);

@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('myClasses').controller('classController',
-    ['$scope', '$stateParams', '$location', 'Authentication','ClassDataProvider', 'UserDataProvider','$http','DataAgent', 'AuthService', '$state',
-    function($scope, $stateParams, $location, Authentication, ClassDataProvider, UserDataProvider, $http,DataAgent, AuthService, $state) {
+    ['theClass', '$scope', '$stateParams', '$location', 'Authentication','ClassDataProvider','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider','$http','DataAgent', 'AuthService', '$state',
+    function(theClass, $scope, $stateParams, $location, Authentication, ClassDataProvider, RoomDataProvider, StudentDataProvider,UserDataProvider, $http,DataAgent, AuthService, $state) {
         $scope.authentication = Authentication;
         $scope.isEditClassName = false;
         $scope.addState = true;
         $scope.addBatchState = false;
         var me = AuthService.me;
 
-        ClassDataProvider.getClass($stateParams.classId,function(theClass){
+        //ClassDataProvider.getClass($stateParams.classId,function(theClass){
             $scope.theClass = theClass;
             $scope.theClass.students = $scope.theClass.students.sort(function(a, b) {
                 if (a.name && b.name) {
@@ -30,6 +30,10 @@ angular.module('myClasses').controller('classController',
                     }
                 })
             });
+        //});
+
+        RoomDataProvider.getRoom($stateParams.roomId, function(room){
+           $scope.roomMin = room;
         });
 
         $scope.logout = function (row) {
@@ -53,6 +57,8 @@ angular.module('myClasses').controller('classController',
 
         $scope.showJoinStudentDialog = function() {
             $('#joinStudentDialog').modal('show');
+            getStudentsNotInRoom();
+
             //$scope.toAddStudents = true;
         };
 
@@ -89,18 +95,151 @@ angular.module('myClasses').controller('classController',
             $scope.isEditClassName = false;
             ClassDataProvider.editClass({
                 name: $scope.theClass.name
-            }, $stateParams.classId,function(newClassMin) {
+            }, $stateParams.roomId,function(newClassMin) {
             });
         };
 
-        $scope.addStudents = function() {
+        $scope.toAddStudents = function() {
             $scope.addState = true;
             $scope.addBatchState = false;
         };
 
-        $scope.addStudentsBatch = function() {
+        $scope.toAddStudentsBatch = function() {
             $scope.addState = false;
             $scope.addBatchState = true;
+        };
+
+
+
+        var selectedStudents = [];
+        var getStudentsNotInRoom = function () {
+                console.log('start');
+                StudentDataProvider.getStudentsBySchool(me.school, function(students){
+                    var allStudents = students;
+                    var studentIds = $scope.theClass.students;
+
+                    selectedStudents = [];
+                    var studentsNotInRoom = [];
+                    for (var i = 0; i < allStudents.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < studentIds.length; j++) {
+                            if (allStudents[i]._id === studentIds[j]._id) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            studentsNotInRoom.push(allStudents[i]);
+                            studentsNotInRoom[studentsNotInRoom.length - 1].selected = false;
+                        }
+                    }
+                    $scope.studentsNotInRoom = studentsNotInRoom;
+                });
+
+
+            };
+
+        $scope.selectStudents = function (index) {
+            if ($scope.studentsNotInRoom[index].selected) {
+                $scope.studentsNotInRoom[index].selected = false;
+                for (var i = 0; i < selectedStudents.length; i++) {
+                    if (selectedStudents[i] == $scope.studentsNotInRoom[index]._id) {
+                        selectedStudents.splice(i, 1);
+                        break;
+                    }
+                }
+            } else {
+                $scope.studentsNotInRoom[index].selected = true;
+                selectedStudents.push($scope.studentsNotInRoom[index]._id);
+            }
+        };
+
+        $scope.addStudents = function() {
+
+            console.log(selectedStudents);
+            RoomDataProvider.addStudentsToRoom($scope.roomMin, selectedStudents, function(room) {
+                $('#joinStudentDialog').modal('hide');
+                $state.transitionTo($state.current, $stateParams, {
+                    reload: true,
+                    inherit: false,
+                    notify: true
+                });
+            })
+
+        };
+
+        $scope.addStudentsBatch = function() {
+
+        };
+
+
+
+        $scope.toCreateStudent = function() {
+            $('#createStudentDialog').modal('show');
+        };
+
+        $scope.createStudent = function () {
+            if (($scope.newStudent === undefined) || ($scope.newStudent.name == '') || ($scope.newStudent.name === undefined) || ($scope.newStudent.username == '') || ($scope.newStudent.username === undefined)) {
+                alert('请填写新学生名称');
+                return;
+            }
+            if (!$scope.newStudent.username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
+                alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。');
+                return;
+            }
+            StudentDataProvider.createStudent({
+                "name": $scope.newStudent.name,
+                "username": $scope.newStudent.username,
+                "school": me.school,
+                "callBack": function (err, student) {
+                    if (err) {
+                        alert('创建失败，可能由于用户已存在。');
+                        return;
+                    }
+                    $scope.studentsNotInRoom.push(student);
+                    $scope.studentsNotInRoom[$scope.studentsNotInRoom.length-1].selected = true;
+                    $scope.newStudent = undefined;
+                    $('#createStudentDialog').modal('hide');
+                }
+            });
+        };
+
+        $scope.showEditStudentDialog = function(row) {
+            $('#editStudentDialog').modal('show');
+            $scope.row = row;
+            $scope.temp.newName = row.entity.name;
+            $scope.temp.newUsername = row.entity.username;
+
+        };
+
+        $scope.showRemoveStudentDialog = function(row) {
+            $('#removeStudentDialog').modal('show');
+            $scope.row = row;
+
+        };
+
+        $scope.removeStudentFromRoom = function(row) {
+            RoomDataProvider.removeStudentFromRoom($scope.roomMin, row.entity._id, function(old){
+                $scope.theClass.students.splice($scope.theClass.students.indexOf(old),1);
+                $('#removeStudentDialog').modal('hide');
+            })
+        };
+
+        $scope.editStudent = function(row) {
+            var info = {};
+            info._id = row.entity._id;
+            info.name = $scope.temp.newName;
+            info.username = $scope.temp.newUsername;
+            StudentDataProvider.editStudent(info, function(err, editedStudent){
+                if(err){
+                    $scope.temp.error = true;
+                    return;
+                }
+                $scope.row.entity.name = editedStudent.name;
+                $scope.row.entity.username = editedStudent.username;
+                $('#editStudentDialog').modal('hide');
+
+            })
         };
 
 
@@ -113,10 +252,14 @@ angular.module('myClasses').controller('classController',
             columnDefs: [
                 {field: 'username', displayName: '用户名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'name', displayName: '姓名'},
-                {field: 'birthday', displayName: '生日'},
                 {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'loginTime', displayName: '上次登录时间'},
-                {field: 'tablet', displayName: '', cellTemplate:'<button type="button" style="align-items: center" class="btn btn-default btn-sm" ng-click="showLogoutDialog(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
+                {field: '', displayName: '', cellTemplate:
+                '<div class="ngCellText" ng-class="col.colIndex()" align=center>' +
+                '<a class="glyphicon glyphicon-edit text-primary" ng-click="showEditStudentDialog(row)"></a> &nbsp;&nbsp;' +
+                '<a class="glyphicon glyphicon-remove text-primary" ng-click="showRemoveStudentDialog(row)"></a></div>'},
+                {field: 'tablet', displayName: '',
+                    cellTemplate:'<button type="button" style="align-items: center" class="btn btn-default btn-sm" ng-click="showLogoutDialog(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出晓书</button>'}
             ]
         };
     }

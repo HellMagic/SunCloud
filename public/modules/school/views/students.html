@@ -1,14 +1,70 @@
 <div class="container-fluid">
+    <!--<form class="form-inline pull-right">-->
+        <!--<div class="form-group">-->
+            <!--<input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">-->
+            <!--<input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">-->
+        <!--</div>-->
+        <!--<button class="btn btn-primary fui-plus" ng-click="createStudent()">添加学生</button>-->
+    <!--</form>-->
     <form class="form-inline pull-right">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">
-            <input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">
-        </div>
-        <button class="btn btn-primary fui-plus" ng-click="createStudent()">添加学生</button>
+        <button class="btn btn-primary fui-plus" ng-click="showCreateStudentDialog()">创建学生</button>
+        <button class="btn btn-primary fui-plus" ng-click="showCreateStudentBatchDialog()">批量创建</button>
     </form>
+
+
     <p class="tableTitle">所有学生</p>
     <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions"></div>
+        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectStudent()"></div>
+    </div>
+
+
+    <div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">创建学生</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">
+                        <br>
+                    <input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="createStudent()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createStudentBatchDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">批量创建学生</h4>
+                </div>
+                <div class="modal-body">
+                        <div>
+                            <p>每行一个学生，请按照如下格式输入：</p>
+                            <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1</p>
+                            <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2</p>
+                        </div>
+
+                        <textarea ng-model="newStudentsList" style="height: 100px" class="form-control"></textarea>
+
+                        <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                    <button class="btn btn-success" ng-click="createStudent()">确定</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="removeStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

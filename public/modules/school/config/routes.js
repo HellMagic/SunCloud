@@ -13,7 +13,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 templateUrl:  __templates + 'schoolNav.html'
             }).
             state('schoolInfo',{
-               //url: ,
+               //url: '/',
                 parent: 'schoolNav',
                 controller: 'schoolController',
                 templateUrl: __templates + 'school.html',
@@ -26,7 +26,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 }
             }).
             state('students',{
-                //url: '/:classId',
+                url: '/students',
                 parent: 'schoolNav',
                 controller: 'studentsController',
                 templateUrl: __templates + 'students.html',
@@ -40,7 +40,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 }
             }).
             state('teachers',{
-                //url: '/tablets/:tabletId',
+                url: '/teachers',
                 parent: 'schoolNav',
                 controller: 'teachersController',
                 templateUrl: __templates + 'teachers.html',
@@ -54,7 +54,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 }
             }).
             state('classes',{
-                //url: '',
+                url: '/classes',
                 parent: 'schoolNav',
                 controller: 'classesController',
                 templateUrl: __templates + 'classes.html',
@@ -68,7 +68,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 }
             }).
             state('tablets',{
-                //url: '/students/:studentId',
+                url: '/tablets',
                 parent: 'schoolNav',
                 controller: 'tabletsController',
                 templateUrl: __templates + 'tablets.html',
@@ -82,19 +82,19 @@ angular.module('schoolManage').config(['$stateProvider',
                 }
             }).
             state('apps',{
-                //url: '',
+                url: '/apps',
                 parent: 'schoolNav',
                 controller: 'appsController',
                 templateUrl: __templates + 'apps.html'
             }).
             state('template',{
-                //url: '',
+                url: '/template',
                 parent: 'schoolNav',
                 controller: 'templateController',
                 templateUrl: __templates + 'template.html'
             }).
             state('setting', {
-                //url: '',
+                url: '/setting',
                 parent: 'schoolNav',
                 controller: 'settingController',
                 templateUrl: __templates + 'setting.html'

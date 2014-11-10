@@ -50,14 +50,17 @@ angular.module('schoolManage')
          * TODO: NEED EDIT $route.current.params.studentId
          * @returns {jQuery.promise|promise.promise|promise|d.promise|.ready.promise|jQuery.ready.promise}
          */
-        var getStudent = function () {
+        var getStudent = function (studentId, callBack) {
             var defered = $q.defer();
             var studentPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/users/" + $route.current.params.studentId
+                url: "/users/" + studentId + "?populate=school"
             }).success(function (student) {
                 defered.resolve(student);
+                if(callBack) {
+                    callBack(student);
+                }
             }).error(function (err) {
                 console.error(err);
             });
@@ -84,12 +87,26 @@ angular.module('schoolManage')
                 console.error(err);
             });
         };
+
+        var getStudentRoom = function(studentId, callBack) {
+            $http({
+                method: "GET",
+                url: "/rooms?students=" + studentId
+            }).success(function (rooms){
+                callBack(rooms);
+            }).error(function(err){
+                console.error(err);
+            })
+
+        };
+
         return {
             getStudentsBySchool: getStudentsBySchool,
             getCountsOfStudentsBySchool: getCountsOfStudentsBySchool,
             createStudent: createStudent,
             getStudent: getStudent,
             editStudent: editStudent,
-            removeStudent: removeStudent
+            removeStudent: removeStudent,
+            getStudentRoom: getStudentRoom
         };
     }]);

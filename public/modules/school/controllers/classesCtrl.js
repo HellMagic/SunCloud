@@ -15,7 +15,7 @@ angular.module('schoolManage')
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '班级名'},
-                    {field: 'school.name', displayName: '管理老师'},
+                    //{field: 'school.name', displayName: '管理老师'},
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                 ],
@@ -57,7 +57,8 @@ angular.module('schoolManage')
 
             $scope.selectRoom = function () {
                 //console.log($scope.selectedItem);
-                $location.path('/classes/' + $scope.gridOptions.selectedItems[0]._id);
+                //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
+                $location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
             };
 
 

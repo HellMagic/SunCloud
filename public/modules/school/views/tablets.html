@@ -1,6 +1,24 @@
 <div class="container-fluid">
     <p class="tableTitle">所有晓书</p>
     <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions"></div>
+        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectTablet()"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">登出平板</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要将{{row.entity.user.name}}登出晓书吗？
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="logout(row)">确定</button>
+            </div>
+        </div>
     </div>
 </div>

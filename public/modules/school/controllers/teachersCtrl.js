@@ -1,11 +1,13 @@
 angular.module('schoolManage')
     .controller('teachersController',
-    ['teachers', 'TeacherDataProvider', '$scope', 'AuthService',
-        function (teachers, TeacherDataProvider, $scope, AuthService) {
+    ['teachers', 'TeacherDataProvider', '$scope', 'AuthService', '$location',
+        function (teachers, TeacherDataProvider, $scope, AuthService, $location) {
             $scope.teachers = teachers;
             var me = AuthService.me;
             $scope.temp = {};
             $scope.temp.error = false;
+            $scope.selectedTeacher = [];
+
 
             $scope.gridOptions =
             {
@@ -24,7 +26,9 @@ angular.module('schoolManage')
 
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
-                ]
+                ],
+                selectedItems: $scope.selectedTeacher
+
             };
 
 
@@ -93,12 +97,11 @@ angular.module('schoolManage')
 
 
 
-            $scope.onDblClickRow = function (rowItem) {
-                var thisUser = rowItem.entity;
-                window.location = '#/student/' + thisUser._id;
+            $scope.selectTeacher = function () {
+                //console.log($scope.selectedItem);
+                //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
+                $location.path('/teachers/' + $scope.gridOptions.selectedItems[0]._id);
             };
-
-
 
 
         }]);

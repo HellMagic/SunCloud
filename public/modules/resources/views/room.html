@@ -1,0 +1,242 @@
+<nav class="navbar navbar-default  room-header">
+    <div class="navbar-header">
+        <a id="room-name" class="navbar-brand" ng-if="!isEditingRoomName">{{room.name}}</a>
+
+        <form id="room-edit-form" class="navbar-form navbar-left" ng-if="isEditingRoomName">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="班级名称" ng-model="roomNewName">
+            </div>
+            <button class="btn btn-primary" ng-click="editRoom()">确定</button>
+            <button id="room-edit-btn-cancel" class="btn btn-inverse" ng-click="cancelEdit()">取消</button>
+        </form>
+
+    </div>
+    <button id="room-btn-edit" class="btn btn-primary navbar-btn" ng-if="!isEditingRoomName" ng-click="toEdit()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+    <div class="navbar-right">
+        <p class="navbar-text watermark">id:{{room._id}}</p>
+        <a href="" onclick="window.history.back()" class="navbar-brand fui-arrow-left"><span class="glyphicon glyphicon-chevron-left"></span> 返回 &nbsp;&nbsp;</a>
+    </div>
+
+
+
+</nav>
+
+<div class="tab-content">
+    <ul class="nav nav-tabs" id="roomTabs">
+        <li class="active"><a href="#room-tab-studentsList" data-toggle="tab" id="room-btn-studentsList" class="tableTitle">学生列表({{students.length}}人)</a></li>
+        <li><a href="#room-tab-teachersList" data-toggle="tab" id="room-btn-teachersList" class="tableTitle">教师列表</a></li>
+        <!--<li><a href="" data-toggle="tab" id="room-btn-chaptersList">课程列表</a></li>-->
+    </ul>
+    <div class="tab-pane fade in active" id="room-tab-studentsList">
+        <div class="pull-right">
+            <a class="btn btn-primary " ng-click="toAddStudents()">添加学生</a>
+            <a class="btn btn-primary " id="room-btn-createStudents"  ng-click="toAddStudentsBatch()">批量操作</a>
+        </div>
+        <br>
+        <br>
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>姓名</th>
+                <th>用户名</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr ng-repeat="student in students" class="clickable">
+                <td ng-click="studentPage($index)">{{student.name}}</td>
+                <td ng-click="studentPage($index)">{{student.username}}</td>
+                <td ng-click="showRemoveStudentFromRoomDialog($index)"><span  class="glyphicon glyphicon-remove text-primary"></span></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="tab-pane fade" id="room-tab-teachersList">
+        <a class="btn btn-primary pull-right fui-check" ng-click="showAddTeacherDialog()">指派管理老师</a>
+
+        <div>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>姓名</th>
+                    <th>用户名</th>
+                    <th>科目</th>
+                    <th>&nbsp;</th>
+                </tr>
+                <tr ng-repeat="teacherObj in teachers" class="clickable">
+                    <td ng-click="teacherPage($index)">{{teacherObj.teacher.name}}</td>
+                    <td ng-click="teacherPage($index)">{{teacherObj.teacher.username}}</td>
+                    <td ng-click="teacherPage($index)">{{teacherObj.subject}}</td>
+                    <td ng-click="showRemoveTeacherFromRoomDialog($index)"><span  class="glyphicon glyphicon-remove text-primary"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--**************************Modal***************************-->
+<div class="modal fade" id="removeStudentFromRoomDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">移出班级</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要将学生 {{students[index].name}} 从班级 {{room.name}} 中删除吗？
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="removeStudentFromRoom(index)">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeTeacherFromRoomDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">移出班级</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要将老师 {{teachers[index].teacher.name}} 从班级 {{room.name}} 中删除吗？
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="removeTeacherFromRoom(index)">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="room-addStudents" tabindex="-1" role="dialog" aria-labelledby="addStudentsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addStudentsModalLabel">添加学生</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" placeholder="搜索" ng-model="searchText" >
+
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>选择</th>
+                        <th>姓名</th>
+                        <th>用户名</th>
+                    </tr>
+                    <tr ng-repeat="student in studentsNotInRoom | filter:searchText" ng-click="selectStudents($index)" class="clickable">
+                        <td><a ng-show="student.selected" class="glyphicon glyphicon-ok-sign"></a></td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.username}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="pull-right">想添加的学生不在此列表中？
+                    <!--<button class="btn btn-default btn-info text-primary" ng-click="toCreateStudent()">创建学生</button>-->
+                    <a data-toggle="modal" href="#createStudentDialog" class="btn btn-primary">创建学生</a>
+
+                </p>
+                <button class="btn btn-primary  btn-block" ng-click="addStudents()">添加</button>
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="room-AddStudentsBatch" tabindex="-1" role="dialog"
+     aria-labelledby="createAddStudentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="createAddStudentsModalLabel">批量添加学生</h4>
+            </div>
+            <div class="modal-body">
+                <p>批量创建学生并添加至这个班级，如果学生已存在，则直接加入本班级.</p>
+
+                <p>每行一个学生，请按照如下格式输入：</p>
+
+                <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1</p>
+                <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2</p>
+
+
+                <textarea ng-model="newStudentsList" style="height:100px" class="form-control"></textarea>
+
+                <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
+                <button class="btn btn-primary pull-right" ng-click="AddStudentsBatch()">创建并添加</button>
+
+                <br>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="room-addTeachers" tabindex="-1" role="dialog" aria-labelledby="addTeachersModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addTeachersModalLabel">指派管理教师</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>选择</th>
+                        <th>姓名</th>
+                        <th>用户名</th>
+                    </tr>
+                    <tr ng-repeat="teacher in allTeachers" ng-click="selectTeachers($index)" class="clickable">
+                        <td><a ng-show="teacher.selected" class="fui-check-inverted"></a></td>
+                        <td>{{teacher.name}}</td>
+                        <td>{{teacher.username}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary fui-check pull-right" ng-click="addTeachers()">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">创建学生</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">
+                    <br>
+                    <input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="createStudent()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

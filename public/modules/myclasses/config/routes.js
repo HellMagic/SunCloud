@@ -11,20 +11,27 @@ angular.module('myClasses').config(['$stateProvider',
                 templateUrl: __templates + 'index.html'
             }).
             state('classView',{
-                url: '/:classId',
+                url: '/:roomId',
                 parent: 'ClassesView',
                 controller: 'classController',
-                templateUrl: __templates + 'class.html'
+                templateUrl: __templates + 'class.html',
+                resolve: {
+                    theClass: ['ClassDataProvider','$stateParams', 'AuthService',
+                        function(ClassDataProvider, $stateParams) {
+                            return ClassDataProvider.getClass($stateParams.roomId);
+                        }
+                    ]
+                }
 
-            }).
-            state('tabletView',{
-                url: '/tablets/:tabletId',
-                templateUrl:  __templates + 'tablet.html'
-            }).
-            state('studentView',{
-                url: '/students/:studentId',
-                templateUrl: __templates + 'student.html'
-            })
+            })//.
+            //state('tabletView1',{
+            //    url: '/tablets/:tabletId',
+            //    templateUrl:  __templates + 'tablet.html'
+            //}).
+            //state('studentView1',{
+            //    url: '/students/:studentId',
+            //    templateUrl: __templates + 'student.html'
+            //})
         ;
     }
 ]);

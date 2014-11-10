@@ -85,14 +85,17 @@ angular.module('schoolManage')
                 info.callBack('Username already exists');
             });
         };
-        var getTeacher = function () {
+        var getTeacher = function (teacherId, callBack) {
             var defered = $q.defer();
             var teacherPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/users/" + $route.current.params.teacherId
+                url: "/users/" + teacherId + "?populate=school"
             }).success(function (teacher) {
                 defered.resolve(teacher);
+                if(callBack) {
+                    callBack(teacher);
+                }
             }).error(function (err) {
                 ohNo(err);
             });
@@ -119,6 +122,17 @@ angular.module('schoolManage')
                 callBack(err);
             });
         };
+
+        var getTeacherRooms = function (teacherId, callBack) {
+            $http({
+                method: "GET",
+                url: "/rooms?teachers.teacher=" + teacherId
+            }).success(function(rooms){
+                callBack(rooms)
+            }).error(function(err){
+                console.error(err);
+            })
+        };
         return {
             //getMe: getMe,
             //getMySchool: getMySchool,
@@ -127,6 +141,7 @@ angular.module('schoolManage')
             createTeacher: createTeacher,
             getTeacher: getTeacher,
             editTeacher: editTeacher,
-            removeTeacher: removeTeacher
+            removeTeacher: removeTeacher,
+            getTeacherRooms: getTeacherRooms
         };
     }]);

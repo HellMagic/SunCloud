@@ -25,13 +25,13 @@ li .active {
 }
 
 
-table#school-overview, th, td  {
+table.school-overview, th.school-overview, td.school-overview  {
     align-content: center;
     border: 1px solid black;
-    /*border-collapse: collapse;*/
+    border-collapse: collapse;
 }
 
-td {
+td.school-overview {
     padding: 12px;
     text-align: center;
 
