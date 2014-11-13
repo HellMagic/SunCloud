@@ -40,15 +40,14 @@ angular.module('schoolManage')
 
                 RoomDataProvider.createRoom({
                     "name": $scope.newRoom.name.trim(),
-                    "school": me.school,
-                    "callBack": function (err, room) {
-                        if (err) {
-                            alert('创建失败，可能由于班级名已存在。');
+                    "school": me.school},
+                    function(err, room) {
+                        if(err) {
+                            alert('创建失败，可能由于班级名已存在');
                             return;
                         }
                         rooms.push(room);
                         $scope.newRoom = undefined;
-                    }
                 });
             };
 
@@ -56,12 +55,6 @@ angular.module('schoolManage')
 
 
             $scope.selectRoom = function () {
-                //console.log($scope.selectedItem);
-                //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
                 $location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
             };
-
-
-
-
         }]);

@@ -1,5 +1,5 @@
 angular.module('schoolManage')
-    .factory('SchoolDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
+    .factory('SchoolDataProvider', ['$http', '$q', function ($http, $q) {
 
         var createSchool = function (name, callBack) {
             $http({
@@ -30,8 +30,7 @@ angular.module('schoolManage')
             });
             return schoolPromise;
         };
-        var editSchool = function (school, callBack) {//This will remove the information of rooms!
-            delete school.rooms;
+        var editSchool = function (school, callBack) {
             $http({
                 method: "PUT",
                 url: "/schools/" + school._id,
@@ -42,10 +41,10 @@ angular.module('schoolManage')
                 console.error(err)
             });
         };
-        var deleteSchool = function (callBack) {
+        var deleteSchool = function (schoolId, callBack) {
             $http({
                 method: "DELETE",
-                url: "/schools/" + $route.current.params.schoolId
+                url: "/schools/" + schoolId
             }).success(function (school) {
                 callBack(school);
             }).error(function (err) {

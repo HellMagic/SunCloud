@@ -1,6 +1,6 @@
 angular.module('schoolManage')
-    .factory('RoomDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
-        var createRoom = function (info) {
+    .factory('RoomDataProvider', ['$http', '$q', function ($http, $q) {
+        var createRoom = function (info, callBack) {
             $http({
                 method: "POST",
                 url: "/rooms",
@@ -11,9 +11,9 @@ angular.module('schoolManage')
                     "teachers": [{}]
                 }
             }).success(function (room) {
-                info.callBack(undefined, room);
+                callBack(null, room);
             }).error(function (err) {
-                info.callBack(err);
+                callBack(err);
             });
         };
 

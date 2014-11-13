@@ -1,45 +1,5 @@
 angular.module('schoolManage')
     .factory('TeacherDataProvider', ['$http', '$q', '$route',function ($http, $q, $route) {
-
-
-        //var getMe = function (callBack) {
-        //    var deferred = $q.defer();
-        //    var userPromise = deferred.promise;
-        //
-        //    $http.get('/me')
-        //        .success(function (user) {
-        //            callBack(user);
-        //            deferred.resolve(user);
-        //            me = user;
-        //        })
-        //        .error(function (err) {
-        //            deferred.reject('Fetch User Error: ' + err);
-        //        });
-        //    return userPromise;
-        //};
-        //
-        //var getMySchool = function (callBack) {
-        //
-        //        var defered = $q.defer();
-        //        var schoolPromise = defered.promise;
-        //        $http({
-        //            method: "GET",
-        //            url: "/schools/" + me.school
-        //        }).success(function (school) {
-        //            if(callBack){
-        //                callBack(school);
-        //            }
-        //            defered.resolve(school);
-        //        }).error(function (err) {
-        //            console.error(err)
-        //        });
-        //        return schoolPromise;
-        //
-        //
-        //};
-
-
-
         var getTeachersBySchool = function(schoolId, callBack) {
             var defered = $q.defer();
             var teachersBySchoolPromise = defered.promise;
@@ -134,8 +94,6 @@ angular.module('schoolManage')
             })
         };
         return {
-            //getMe: getMe,
-            //getMySchool: getMySchool,
             getTeachersBySchool: getTeachersBySchool,
             getCountsOfTeachersBySchool: getCountsOfTeachersBySchool,
             createTeacher: createTeacher,
