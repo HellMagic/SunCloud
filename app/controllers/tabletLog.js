@@ -23,7 +23,11 @@ exports.getSchool = function(req, res) {
     var school = [{
         name: "阳光书屋",
         uuid: "235343552"
-    }];
+    },
+        {
+            name: "光合新知",
+            uuid: "124333232342"
+        }];
 
     //res.set('Content-Type', 'application/json');
     res.status(200).send(school);
@@ -84,9 +88,10 @@ exports.tabletLogin = function(req,res) {
                             user_account_type: req.body.user_type,
                             user_school: user.school.name,
                             user_birthday: user.birthday,
-                            user_allowed_apps:[],
+                            user_allowed_apps:['com.hujiang.chengyu'],
                             user_grade: user.grade,
-                            user_class: room.name
+                            user_class: room.name,
+                            user_password: '123456'
                         };
                         Tablet.findOne({machine_id: req.body.machine_id}, function(err, tablet){
 

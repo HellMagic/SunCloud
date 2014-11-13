@@ -1,8 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>Server Error</h1>
+<div align="center">
+	<h1>500</h1>
+	<h2>对不起，服务器出现问题</h2>
 <pre>
-	{{error}}
+	<a href="javascript:history.back()">返回上一页</a>或者<a href="/">回到首页</a>
 </pre>
+</div>
 {% endblock %}

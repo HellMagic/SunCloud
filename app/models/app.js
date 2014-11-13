@@ -17,6 +17,23 @@ var AppSchema = new Schema({
     version: {
         type: String
     },
+    version_name: String,
+    created_at: Date,
+    deleted_at: Date,
+    file_content_type: String,
+    file_file_name: String,
+    file_file_size: Number,
+    file_updated_at: Date,
+    pakage: String,
+    status: {
+        type: String,
+        enum: ['release']
+    },
+    updated_at: Date,
+    uuid: String,
+    ts: Number,
+    id: Number,
+    whats_new: String,
     icon: {
         type: String
     },
