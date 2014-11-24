@@ -1,7 +1,7 @@
 'use strict';
 
 // Authentication service for user variables
-angular.module('myClasses').factory('AuthService', ['$http', function($http){
+angular.module('core').factory('AuthService', ['$http', function($http){
 
     var me = {};
     $.ajax({

@@ -29,21 +29,11 @@ angular.module('schoolManage')
         };
 
         var createTeacher = function (info) {
-            $http({
+            return $http({
                 method: "POST",
                 url: "/users",
-                data: {
-                    "name": info.name,
-                    "username": info.username,
-                    "roles": ["teacher"],
-                    "school": info.school,
-                    "password": "xiaoshu"
-                }
-            }).success(function (teacher) {
-                info.callBack(undefined, teacher);
-            }).error(function (err) {
-                info.callBack('Username already exists');
-            });
+                data: info
+            })
         };
         var getTeacher = function (teacherId, callBack) {
             var defered = $q.defer();
@@ -57,40 +47,29 @@ angular.module('schoolManage')
                     callBack(teacher);
                 }
             }).error(function (err) {
-                ohNo(err);
+                console.error(err);
+                defered.reject(err);
             });
             return teacherPromise;
         };
-        var editTeacher = function (teacher, callBack) {
-            $http({
+        var editTeacher = function (teacher) {
+            return $http({
                 method: "PUT",
                 url: "/users/" + teacher._id,
                 data: teacher
-            }).success(function (teacher) {
-                callBack(undefined,teacher);
-            }).error(function (err) {
-                callBack(err);
-            });
+            })
         };
-        var removeTeacher = function (teacherId, callBack) {
-            $http({
+        var deleteTeacher = function (teacherId) {
+            return $http({
                 method: "DELETE",
                 url: "/users/" + teacherId
-            }).success(function (teacher) {
-                callBack(undefined, teacher);
-            }).error(function (err) {
-                callBack(err);
-            });
+            })
         };
 
-        var getTeacherRooms = function (teacherId, callBack) {
-            $http({
+        var getTeacherRooms = function (teacherId) {
+            return $http({
                 method: "GET",
-                url: "/rooms?teachers.teacher=" + teacherId
-            }).success(function(rooms){
-                callBack(rooms)
-            }).error(function(err){
-                console.error(err);
+                url: "/rooms?teachers=" + teacherId
             })
         };
         return {
@@ -99,7 +78,7 @@ angular.module('schoolManage')
             createTeacher: createTeacher,
             getTeacher: getTeacher,
             editTeacher: editTeacher,
-            removeTeacher: removeTeacher,
+            deleteTeacher: deleteTeacher,
             getTeacherRooms: getTeacherRooms
         };
     }]);

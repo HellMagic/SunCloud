@@ -16,11 +16,11 @@ angular.module('schoolManage')
                 {name:'应用程序', state: 'apps'},
                 {name:'设置', state: 'setting'}];
 
-            $state.transitionTo('schoolInfo');
+            //$state.transitionTo('schoolInfo');
 
-            $scope.selectedState = $scope.items[0].state;
+            //$scope.selectedState = $scope.items[0].state;
             $scope.goto = function(state) {
-                $scope.selectedState = state;
+                //$scope.selectedState = state;
                 $state.transitionTo(state);
             };
         }

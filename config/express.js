@@ -107,6 +107,7 @@ module.exports = function(db) {
 	app.use(helmet.ienoopen());
 	app.disable('x-powered-by');
 
+
 	// Setting the app router and static folder
 	app.use(express.static(path.resolve('./public')));
 
@@ -136,6 +137,8 @@ module.exports = function(db) {
 			error: 'Not Found'
 		});
 	});
+
+
 
 	return app;
 };

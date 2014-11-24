@@ -1,4 +1,4 @@
-angular.module('myClasses')
+angular.module('resources')
     .factory('DataAgent', ['$rootScope' , function ($rootScope) {
         var sharedService = {};
 

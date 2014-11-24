@@ -1,11 +1,7 @@
 <div>
-
     <div class="class-header">
         <h4><span ng-if="!isEditClassName">{{theClass.name}}</span>
             <input style="color:black " type="text" ng-if="isEditClassName" ng-model="theClass.name" ng-blur="editClassNameOver()">
-            <!--&nbsp &nbsp<span class="glyphicon glyphicon-edit" data-tooltip-style="light" data-toggle="tooltip" data-placement="right" title="修改班名"-->
-                             <!--ng-click="editClassName()" href=""></span>-->
-
         </h4>
                     <span ng-repeat="subject in theClass.mySubject">
                 <span class="badge pull-right">{{subject}}</span>
@@ -154,12 +150,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
 
     <div class="modal fade" id="logoutDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class='modal-dialog'>

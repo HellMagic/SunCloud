@@ -2972,7 +2972,7 @@ angular.module('ui.grid')
           ];
         }]);
       </file>
-      <file name="index.html">
+      <file name="rooms.html">
         <div ng-controller="MainCtrl">
           <div ui-grid="{ data: data }"></div>
         </div>
@@ -8093,7 +8093,7 @@ module.service('gridUtil', ['$log', '$window', '$document', '$http', '$templateC
             };
           }]);
         </file>
-        <file name="index.html">
+        <file name="rooms.html">
           <div ng-controller="MainCtrl">
             <strong>Column name:</strong> <input ng-model="name" />
             <br>
@@ -10451,7 +10451,7 @@ module.filter('px', function() {
       ];
     }]);
    </file>
-   <file name="index.html">
+   <file name="rooms.html">
    <div ng-controller="MainCtrl">
    <div ui-grid="{ data: data, columnDefs: columnDefs }" ui-grid-cellnav></div>
    </div>
@@ -10891,7 +10891,7 @@ module.filter('px', function() {
       ];
     }]);
    </file>
-   <file name="index.html">
+   <file name="rooms.html">
    <div ng-controller="MainCtrl">
    <div ui-grid="{ data: data, columnDefs: columnDefs }" ui-grid-edit></div>
    </div>
@@ -12396,7 +12396,7 @@ module.filter('px', function() {
       };
     }]);
    </file>
-   <file name="index.html">
+   <file name="rooms.html">
    <div ng-controller="MainCtrl">
    <div ui-grid="gridOptions" ui-grid-exporter></div>
    </div>
@@ -12581,7 +12581,7 @@ module.filter('px', function() {
       ];
     }]);
    </file>
-   <file name="index.html">
+   <file name="rooms.html">
    <div ng-controller="MainCtrl">
    <div ui-grid="{ data: data, columnDefs: columnDefs }" ui-grid-infinite-scroll="20"></div>
    </div>
@@ -14250,7 +14250,7 @@ module.filter('px', function() {
       ];
     }]);
    </file>
-   <file name="index.html">
+   <file name="rooms.html">
    <div ng-controller="MainCtrl">
    <div ui-grid="{ data: data, columnDefs: columnDefs }" ui-grid-selection></div>
    </div>

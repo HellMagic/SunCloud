@@ -1,0 +1,131 @@
+<div>
+    <div class="app-header">
+                <span class="pull-right">
+                    <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"> 上传安装包</a>
+                    <a role="button" ng-click="back()" class="btn btn-primary btn-info glyphicon glyphicon-chevron-left" >返回</a>
+                </span>
+
+
+                <span ng-hide="editorEnabled">
+                <span class="h3">{{app.name}}
+                    <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
+                </span>
+                </span>
+
+                <span ng-show="editorEnabled">
+                    <input type="text" style="color: black; font-size: large" ng-model="editablename"/>
+                    <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
+                    <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
+                </span>
+
+                <span ng-hide="editor2Enabled">
+                <span class="h3">{{item.name}}
+                    <a href="" ng-click="editor2Enabled=!editor2Enabled" class="glyphicon glyphicon-edit"></a>
+                </span>
+                </span>
+
+                <span ng-show="editor2Enabled">
+                    <select  class="form-control" style="width:auto" ng-model="item" ng-options="item.name for item in pushOptions">
+                    </select>
+                </span>
+
+
+
+
+
+
+        <!--</div>-->
+    </div>
+
+    <div class="table">
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+
+</div>
+
+<!--------------------------------Modal--------------------->
+
+<div class="modal fade" id="uploadApkDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">上传安装包</h4>
+            </div>
+            <div class='modal-body'>
+
+                <input type="file" nv-file-select uploader="uploader">
+
+                <span style="color: red" ng-show="error.extension">只能上传后缀名为apk的文件</span>
+                <span style="color: red" ng-show="error.limit">一次只能上传一个文件，请删除其他文件</span>
+
+                <br>
+                <br>
+                <div ng-show="uploader.queue.length">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th width="50%">文件名</th>
+                        <th ng-show="uploader.isHTML5">大小</th>
+                        <!--<th ng-show="uploader.isHTML5">Progress</th>-->
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in uploader.queue">
+                        <td><strong>{{ item.file.name }}</strong></td>
+                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                        <!--<td ng-show="uploader.isHTML5">-->
+                            <!--<div class="progress" style="margin-bottom: 0;">-->
+                                <!--<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>-->
+                            <!--</div>-->
+                        <!--</td>-->
+                        <td class="text-center">
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                        </td>
+                        <td nowrap>
+                            <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">-->
+                                <!--<span class="glyphicon glyphicon-upload"></span> Upload-->
+                            <!--</button>-->
+                            <!--<button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">-->
+                                <!--<span class="glyphicon glyphicon-ban-circle"></span> Cancel-->
+                            <!--</button>-->
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                <span class="glyphicon glyphicon-trash"></span> 删除
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                    <div>
+                        上传进度:
+                        <div class="progress" style="">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-group pull-right">
+                        <button type="button" class="btn btn-warning btn-s" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove-circle"></span> 关闭
+                        </button>
+                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                            <span class="glyphicon glyphicon-upload"></span> 上传
+                        </button>
+                    </div>
+                    <br>
+                    <br>
+
+                    <!--<button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">-->
+                        <!--<span class="glyphicon glyphicon-trash"></span> 删除-->
+                    <!--</button>-->
+
+            </div>
+        </div>
+    </div>
+</div>

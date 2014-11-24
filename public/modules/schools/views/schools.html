@@ -1,39 +1,102 @@
-<div class="container-fluid schoolsList" >
+<div class="container-fluid">
+    <h4 class="tableTitle pull-left">所有学校 &nbsp;&nbsp;</h4>
 
-     <h4 class="tableTitle">全部学校</h4>
-        <form class="form-inline pull-right" role="form">
-             <div class="form-group">
-                 <input ng-model="newSchoolName" class="form-control" placeholder="新学校名称"/>
-             </div>
-             <button ng-click="createNewSchool()" type="submit" class="btn btn-primary btn-warning ">创建</button>
-         </form>
-        <!--<h5>学校总数: {{schoolCount}}  </h5>-->
+    <div class=" pull-right" style="margin-top:10px">
+        <a role="button" class="btn btn-primary btn-warning" href="#createSchoolDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>新建学校</a>
+    </div>
 
-
-    <div id="schools-table">
-        <table class="table">
-            <tbody>
-            <tr>
-                <th>学校名称</th>
-                <th>学生人数</th>
-                <th>老师人数</th>
-                <th>班级数</th>
-                <th>登录晓书人数<th>
-
-            </tr>
-            <tr ng-click="schoolPage($index)" ng-repeat="school in schools" class="clickable">
-                <td>{{school.name}}</td>
-                <td>{{school.studentCount}}</td>
-                <td>{{school.teacherCount}}</td>
-                <td>{{school.roomCount}}</td>
-                <td>{{school.xiaoshuLogCount}}</td>
+    <div class="inner-addon left-addon pull-left" style="margin-top:10px">
+        <i class="glyphicon glyphicon-search"></i>
+        <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+    </div>
 
 
-            </tr>
-            </tbody>
-        </table>
+    <br>
+    <br>
+
+    <div class="table">
+        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectSchool()"></div>
     </div>
 </div>
 
+
+<!--------------------------MODAL---------------------------------------->
+
+<div class="modal fade" id="createSchoolDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">新建学校</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" name="schoolForm"  novalidate="">
+                    <input type="text" name="name" class="form-control" placeholder="*学校名称" ng-model="newSchool.name" required>
+                    <!--<p ng-show="schoolForm.name.$invalid && !userForm.name.$pristine" class="help-block">必须填写学校名称</p>-->
+                    <br>
+                    <input type="text" name="admin" class="form-control" placeholder="*学校管理员用户名" ng-model="newSchool.admin" required>
+                    <br>
+                    <input type="text" name="code" class="form-control" placeholder="*学校代号" ng-model="newSchool.code" required>
+                    <br>
+                    <input type="text" name="address" class="form-control" placeholder="学校所在地" ng-model="newSchool.address">
+                    <br>
+                    <input type="text" name="serverUrl" class="form-control" placeholder="学校服务器域名 (选填)" ng-model="newSchool.serverUrl">
+                    <br>
+                    <input type="text" name="serverIP" class="form-control" placeholder="学校服务器IP (选填)" ng-model="newSchool.serverIP" ng-pattern='/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/'>
+                    <p ng-show="schoolForm.serverIP.$invalid && !schoolForm.serverIP.$pristine" class="help-block">IP格式不正确</p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" type="submit" ng-click="createSchool(schoolForm.$valid)" ng-disabled="schoolForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editSchoolDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑学校</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="form-inline">
+                        <label for="newName">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校名称</label>
+                        <input type="text" id="newName" class="form-control" style="width:400px" placeholder="" ng-model="temp.newName" required>
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newCode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校代号</label>
+                        <input type="text" id="newCode" class="form-control" style="width:400px" placeholder="" ng-model="temp.newCode" required>
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newAddress">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校所在地</label>
+                        <input type="text" id="newAddress" class="form-control" style="width:400px" placeholder="" ng-model="temp.newAddress">
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newServerUrl">学校服务器域名</label>
+                        <input type="text" id="newServerUrl" class="form-control" style="width:400px" placeholder="" ng-model="temp.newServerUrl">
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newServerIP">&nbsp;&nbsp;&nbsp;&nbsp;学校服务器IP</label>
+                        <input type="text" id="newServerIP" class="form-control" style="width:400px" placeholder="" ng-model="temp.newServerIP">
+                    </div>
+                </form>
+                <span style="color: red" ng-show="error">修改失败，可能由于学校代号或名称已存在。请修改后重试。</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editSchool(row)" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 

@@ -1,6 +1,12 @@
 <div class="container-fluid">
-    <p class="tableTitle">所有晓书</p>
+    <h4 class="tableTitle pull-left">所有晓书 &nbsp;&nbsp;</h4>
+    <div class="inner-addon left-addon pull-left" style="margin-top:10px">
+        <i class="glyphicon glyphicon-search"></i>
+        <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+    </div>
+    <br>
+    <br>
     <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions"></div>
+        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectTablet()"></div>
     </div>
 </div>

@@ -47,14 +47,33 @@ angular.module('resources').config(['$stateProvider',
             state('appView',{
                 url: '/apps/:appId',
                 controller: 'appViewController',
-                templateUrl: __templates + 'app.html'
+                templateUrl: __templates + 'app.html',
+                resolve: {
+                    theApp: ['AppDataProvider', '$stateParams',
+                        function(AppDataProvider, $stateParams) {
+                            return AppDataProvider.getApp($stateParams.appId)
+                        }
+                    ]
+                }
             }).
             state('schoolView',{
                 url: '/schools/:schoolId',
-                controller: 'schoolViewController',
+                //controller: 'schoolViewController',
                 templateUrl: __templates + 'school.html'
             })
         ;
     }
-]);
+]).run(function($rootScope, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+    $rootScope.$on("$stateChangeSuccess",  function(event, toState, toParams, fromState, fromParams) {
+        // to be used for back button //won't work when page is reloaded.
+        $rootScope.previousState_name = fromState.name;
+        $rootScope.previousState_params = fromParams;
+    });
+    //back button function called from back button's ng-click="back()"
+    $rootScope.back = function() {
+        $state.go($rootScope.previousState_name,$rootScope.previousState_params);
+    };
+});
 

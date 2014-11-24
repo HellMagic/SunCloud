@@ -15,10 +15,12 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-                //'public/lib/angular-ui-grid/ui-grid.min.css',
-				'public/lib/ng-grid/ng-grid.min.css'
+                'public/lib/angular-ui-grid/ui-grid.min.css',
+				'public/lib/ng-grid/ng-grid.css',
+				'public/lib/sweetalert/sweet-alert.css'
 			],
 			js: [
+				//'public/lib/ng-file-upload/angular-file-upload-shim.js',
 				'public/lib/angular/angular.js',
 				'public/lib/angular-route/angular-route.js',
 				'public/lib/angular-resource/angular-resource.js',
@@ -29,10 +31,15 @@ module.exports = {
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/underscore/underscore-min.js',
 				//'cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js',
-				//'public/lib/angular-ui-grid/ui-grid.min.js',
+				'public/lib/angular-ui-grid/ui-grid.min.js',
 				'public/lib/ng-grid/ng-grid-2.0.13.min.js',
 				'public/lib/moment/moment.js',
-				'public/lib/bootstrap/dist/js/bootstrap.min.js'
+				'public/lib/bootstrap/dist/js/bootstrap.min.js',
+				'public/lib/sweetalert/sweet-alert.min.js',
+				'public/lib/angular-file-upload/angular-file-upload.js'
+				//'public/lib/ng-file-upload/angular-file-upload.js'
+
+
 
 
 			]

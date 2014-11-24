@@ -1,24 +1,23 @@
 'use strict';
 
-angular.module('myClasses').controller('classController',
-    ['theClass', '$scope', '$stateParams', '$location', 'Authentication','ClassDataProvider','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider','$http','DataAgent', 'AuthService', '$state',
-    function(theClass, $scope, $stateParams, $location, Authentication, ClassDataProvider, RoomDataProvider, StudentDataProvider,UserDataProvider, $http,DataAgent, AuthService, $state) {
+angular.module('myRooms').controller('myRoomController',
+    ['theRoom', '$scope', '$stateParams', '$location', 'Authentication','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider','$http','DataAgent', 'AuthService', '$state',
+    function(theRoom, $scope, $stateParams, $location, Authentication, RoomDataProvider, StudentDataProvider,UserDataProvider, $http,DataAgent, AuthService, $state) {
         $scope.authentication = Authentication;
-        $scope.isEditClassName = false;
+        $scope.isEditRoomName = false;
         $scope.addState = true;
         $scope.addBatchState = false;
         var me = AuthService.me;
 
-        //ClassDataProvider.getClass($stateParams.classId,function(theClass){
-            $scope.theClass = theClass;
-            $scope.theClass.students = $scope.theClass.students.sort(function(a, b) {
+            $scope.theRoom = theRoom;
+            $scope.theRoom.students = $scope.theRoom.students.sort(function(a, b) {
                 if (a.name && b.name) {
                     return a.name.localeCompare(b.name);
                 }
                 return a.username.localeCompare(b.username);
             });
             $scope.noTabletNum = 0;
-            _.each($scope.theClass.students, function(studentItem) {
+            _.each($scope.theRoom.students, function(studentItem) {
 
                 UserDataProvider.getTablet(studentItem._id,function(record){
                     if(record.length){
@@ -30,7 +29,6 @@ angular.module('myClasses').controller('classController',
                     }
                 })
             });
-        //});
 
         RoomDataProvider.getRoom($stateParams.roomId, function(room){
            $scope.roomMin = room;
@@ -51,16 +49,6 @@ angular.module('myClasses').controller('classController',
             })
         };
 
-        $scope.showDisbandClassDialog = function() {
-            $('#disbandClassDialog').modal('show');
-        };
-
-        $scope.showJoinStudentDialog = function() {
-            $('#joinStudentDialog').modal('show');
-            getStudentsNotInRoom();
-
-            //$scope.toAddStudents = true;
-        };
 
         $scope.showLogoutDialog = function(row) {
             $('#logoutDialog').modal('show');
@@ -68,34 +56,34 @@ angular.module('myClasses').controller('classController',
         };
 
 
-        $scope.disclaimClass = function() {
-            ClassDataProvider.disclaimClass($scope.theClass, me._id, function(oldClass) {
+        $scope.disclaimRoom = function() {
+            RoomDataProvider.disclaimRoom($scope.theRoom, me._id, function(oldRoom) {
                 console.log('hello');
-                DataAgent.prepForBroadcast('disclaimClass', oldClass);
-                ClassDataProvider.jumpToFirst();
-                $('#disbandClassDialog').modal('hide');
+                DataAgent.prepForBroadcast('disclaimRoom', oldRoom);
+                RoomDataProvider.jumpToFirst();
+                $('#disbandRoomDialog').modal('hide');
                 $('.modal-backdrop').remove();
                 $state.reload();
             });
         };
 
-        $scope.editClassName = function() {
-            $scope.isEditClassName = true;
+        $scope.editRoomName = function() {
+            $scope.isEditRoomName = true;
         };
 
-        $scope.editClassNameOver = function() {
-            var theEditClass = _.find($scope.classes, function(classItem) {
-                return classItem.classCode == $scope.theClass.classCode;
+        $scope.editRoomNameOver = function() {
+            var theEditRoom = _.find($scope.rooms, function(roomItem) {
+                return roomItem.classCode == $scope.theRoom.classCode;
             });
-            if (theEditClass) {
-                theEditClass.name = $scope.theClass.name;
+            if (theEditRoom) {
+                theEditRoom.name = $scope.theRoom.name;
             } else {
-                console.log('Edit Class Find Error');
+                console.log('Edit Room Find Error');
             }
-            $scope.isEditClassName = false;
-            ClassDataProvider.editClass({
-                name: $scope.theClass.name
-            }, $stateParams.roomId,function(newClassMin) {
+            $scope.isEditRoomName = false;
+            RoomDataProvider.editRoom({
+                name: $scope.theRoom.name
+            }, $stateParams.roomId,function(newRoomMin) {
             });
         };
 
@@ -116,7 +104,7 @@ angular.module('myClasses').controller('classController',
                 console.log('start');
                 StudentDataProvider.getStudentsBySchool(me.school, function(students){
                     var allStudents = students;
-                    var studentIds = $scope.theClass.students;
+                    var studentIds = $scope.theRoom.students;
 
                     selectedStudents = [];
                     var studentsNotInRoom = [];
@@ -220,7 +208,7 @@ angular.module('myClasses').controller('classController',
 
         $scope.removeStudentFromRoom = function(row) {
             RoomDataProvider.removeStudentFromRoom($scope.roomMin, row.entity._id, function(old){
-                $scope.theClass.students.splice($scope.theClass.students.indexOf(old),1);
+                $scope.theRoom.students.splice($scope.theRoom.students.indexOf(old),1);
                 $('#removeStudentDialog').modal('hide');
             })
         };
@@ -246,7 +234,7 @@ angular.module('myClasses').controller('classController',
 
         $scope.gridOptions =
         {
-            data: 'theClass.students',
+            data: 'theRoom.students',
             showFilter: false,
             multiSelect: false,
             columnDefs: [

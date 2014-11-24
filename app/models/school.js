@@ -17,10 +17,20 @@ var SchoolSchema = new Schema({
             required: true,
             unique: true
         },
+        code: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        //admin: {
+        //    type: Schema.Types.ObjectId,
+        //    ref: 'User'
+        //},
         uuid: String,
         ts: String,
         address: String,
         serverUrl: String,
+        serverIP: String,
         template: {
             type: Schema.Types.ObjectId,
             ref: 'Template'

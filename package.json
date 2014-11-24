@@ -1,12 +1,12 @@
 {
 	"name": "SunCloud",
-	"description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
-	"version": "0.3.3",
+	"description": "Sunshine Library",
+	"version": "0.0.1",
 	"private": false,
-	"author": "https://github.com/meanjs/mean/graphs/contributors",
+	"author": "https://github.com/summer-liu/SunCloud/graphs/contributors",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/meanjs/mean.git"
+		"url": "https://github.com/summer-liu/SunCloud.git"
 	},
 	"engines": {
 		"node": "0.10.x",
@@ -41,7 +41,11 @@
 		"glob": "~4.0.5",
 		"async": "~0.9.0",
 		"nodemailer": "~1.3.0",
-		"underscore": "~1.7.0"
+		"underscore": "~1.7.0",
+	  	"adbkit-apkreader": "~1.0.0",
+	  	"connect-multiparty" : "~3.3",
+	  	"connect-busboy": "~0.0.2",
+	  	"multer": "~0.1.6"
 	},
 	"devDependencies": {
 		"supertest": "~0.14.0",

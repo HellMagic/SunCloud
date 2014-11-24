@@ -1,29 +1,10 @@
-angular.module('myClasses')
+angular.module('resources')
     .factory('UserDataProvider',
     [
         '$http',
         '$q',
-        '$route',
         function
-            ($http, $q, $route) {
-
-            var me = {};
-            var getMe = function (callBack) {
-                var deferred = $q.defer();
-                var userPromise = deferred.promise;
-
-                $http.get('/me')
-                    .success(function (user) {
-                        callBack(user);
-                        deferred.resolve(user);
-                        me = user;
-                        console.log('get me successfully');
-                    })
-                    .error(function (err) {
-                        deferred.reject('Fetch User Error: ' + err);
-                    });
-                return userPromise;
-            };
+            ($http, $q) {
 
             var getTablet = function(studentId, callBack) {
                 var defered = $q.defer();
@@ -145,7 +126,6 @@ angular.module('myClasses')
             };
 
             return {
-                getMe: getMe,
                 login: login,
                 getTablet: getTablet,
                 getUser: getUser,

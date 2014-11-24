@@ -20,10 +20,13 @@ var RoomSchema = new Schema({
         classCode: {
             //This is the Code of the classroom.
             // Students can join this classroom with inputting this Code.
-            type: String,
-            required: true
+            type: String
         },
         grade: String,
+        roomType: {
+            type: String,
+            enum: ['admin', 'teaching']
+        },
         school: {
             type: Schema.Types.ObjectId,
             ref: 'School'//,
@@ -38,15 +41,9 @@ var RoomSchema = new Schema({
         ],
         teachers: [
             {
-                subject:[{
-                    type: String,
-                    default: ''
-                }],
-                teacher: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'User'
-                    //index: true
-                }
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+                index: true
             }
         ],
         newStudents: [
@@ -84,7 +81,6 @@ RoomSchema.statics.createRoom = function (roomInfo, callBack) {
 };
 
 RoomSchema.statics.removeRoom = function (roomInfo, callBack) {
-    //Do something before removing the room.
     var thisModel = this;
     thisModel.find(roomInfo, {'_id': true, 'classCode': true}, function (err, rooms) {
         if (err) {

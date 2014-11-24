@@ -1,121 +1,104 @@
 <div class="container-fluid">
-    <!--<form class="form-inline pull-right">-->
-        <!--<div class="form-group">-->
-            <!--<input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">-->
-            <!--<input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">-->
-        <!--</div>-->
-        <!--<button class="btn btn-primary fui-plus" ng-click="createStudent()">添加学生</button>-->
-    <!--</form>-->
-    <form class="form-inline pull-right">
-        <button class="btn btn-primary fui-plus" ng-click="showCreateStudentDialog()">创建学生</button>
-        <button class="btn btn-primary fui-plus" ng-click="showCreateStudentBatchDialog()">批量创建</button>
-    </form>
+    <h4 class="tableTitle pull-left">所有学生  &nbsp;&nbsp;</h4>
+    <div class=" pull-right" style="margin-top:10px">
+        <a role="button" class="btn btn-primary btn-warning" href="#createStudentDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建学生</a>
+        <a role="button" class="btn btn-primary btn-warning" href="#createStudentBatchDialog" data-toggle="modal"><i class="glyphicon glyphicon-asterisk"></i>批量创建</a>
+    </div>
 
+    <div class="inner-addon left-addon pull-left" style="margin-top:10px">
+        <i class="glyphicon glyphicon-search"></i>
+        <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+    </div>
 
-    <p class="tableTitle">所有学生</p>
+    <br>
+    <br>
+
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectStudent()"></div>
     </div>
 
+</div>
 
-    <div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                    <h4 class="modal-title">创建学生</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                    <input type="text" class="form-control" placeholder="新学生姓名" ng-model="newStudent.name">
-                        <br>
-                    <input type="text" class="form-control" placeholder="新学生用户名" ng-model="newStudent.username">
+
+<div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">创建学生</h4>
+            </div>
+            <div class="modal-body">
+                <form  name="studentForm" class="form-group">
+                    <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
+                    <br>
+                    <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="createStudent()" ng-disabled="studentForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createStudentBatchDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">批量创建学生</h4>
+            </div>
+            <div class="modal-body">
+                <form name="studentBatchForm">
+                    <div>
+                        <p>每行一个学生，请按照如下格式输入：</p>
+                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
+                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
                     </div>
+                    <span style="color: red" ng-show="errorMessage">由于用户名已存在，以下学生创建失败，请修改用户名后重试</span>
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                    <button class="btn btn-success" ng-click="createStudent()">确定</button>
-                </div>
+                    <textarea ng-model="newStudentsList" style="height: 200px" class="form-control" required></textarea>
+
+                    <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="createStudentBatch(studentBatchForm.$valid)" ng-disabled="studentBatchForm.$invalid">确定</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="createStudentBatchDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                    <h4 class="modal-title">批量创建学生</h4>
-                </div>
-                <div class="modal-body">
-                        <div>
-                            <p>每行一个学生，请按照如下格式输入：</p>
-                            <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1</p>
-                            <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2</p>
-                        </div>
 
-                        <textarea ng-model="newStudentsList" style="height: 100px" class="form-control"></textarea>
-
-                        <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                    <button class="btn btn-success" ng-click="createStudent()">确定</button>
-                </div>
+<div class="modal fade" id="editStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑学生</h4>
             </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="removeStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                    <h4 class="modal-title">删除学生</h4>
-                </div>
-                <div class="modal-body">
-                    <p>您确定要将学生{{row.entity.name}}删除吗？
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                    <button class="btn btn-success" ng-click="removeStudent(row)">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                    <h4 class="modal-title">编辑学生</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="form-inline">
-                            <label for="newName">新姓名</label>
-                            <input type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName">
-                        </div>
-
-                        <br>
-                        <br>
-                        <br>
-                        <div class="form-inline">
-                            <label for="newUsername">新用户名</label>
-                            <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername">
-                        </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="form-inline">
+                        <label for="newName">&nbsp;&nbsp;&nbsp;姓名</label>
+                        <input type="text" id="newName" class="form-control" style="width:400px" placeholder="新姓名" ng-model="temp.newName" required>
                     </div>
-                    <span style="color: red" ng-show="temp.error">修改失败，可能由于用户名已存在</span>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                    <button class="btn btn-success" ng-click="editStudent(row)">确定</button>
-                </div>
+                    <br>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newUsername">用户名</label>
+                        <input type="text" id="newUsername" class="form-control" style="width:400px" placeholder="新用户名" ng-model="temp.newUsername" required>
+                    </div>
+                </form>
+                <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editStudent(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>
-
-
 </div>

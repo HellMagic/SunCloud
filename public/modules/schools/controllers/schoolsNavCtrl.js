@@ -16,11 +16,10 @@ angular.module('schools')
                 {name:'模板', state: 'templateAll'},
                 {name:'设置', state: 'settingAll'}];
 
-            $state.transitionTo('schools');
+            //$state.transitionTo('schools');
 
-            $scope.selectedState = $scope.items[0].state;
+            //$scope.selectedState = $scope.items[0].state;
             $scope.goto = function(state) {
-                $scope.selectedState = state;
                 $state.transitionTo(state);
             };
         }

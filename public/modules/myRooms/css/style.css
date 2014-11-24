@@ -1,20 +1,23 @@
 /*style.css*/
 .gridStyle {
-    border: 0px solid rgb(212,212,212);
+    border: none;
     margin-top: 20px;
     width: 100%;
-    height: 500px;
+}
+
+.error-msg {
+    color: #ff0000;
 }
 
 .badge {
     background-color: #8ef13c;
 }
 
-.myclasses {
+.myrooms {
     margin-top: 65px;
 }
 
-#classesList{
+#roomsList{
     margin-top: 20px;
 }
 

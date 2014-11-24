@@ -7,7 +7,10 @@ angular.module('schoolManage')
             $scope.temp = {};
             $scope.temp.error = false;
             $scope.selectedTeacher = [];
-
+            $scope.isAdmin = false;
+            $scope.filterOptions = {
+                filterText: ''
+            };
 
             $scope.gridOptions =
             {
@@ -27,7 +30,9 @@ angular.module('schoolManage')
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                 ],
-                selectedItems: $scope.selectedTeacher
+                selectedItems: $scope.selectedTeacher,
+                filterOptions: $scope.filterOptions
+
 
             };
 
@@ -35,7 +40,6 @@ angular.module('schoolManage')
             $scope.showRemoveTeacherDialog = function(row) {
                 $('#removeTeacherDialog').modal('show');
                 $scope.row = row;
-
             };
 
 
@@ -47,8 +51,8 @@ angular.module('schoolManage')
 
             };
 
-            $scope.removeTeacher = function(row) {
-                TeacherDataProvider.removeTeacher(row.entity._id, function(old){
+            $scope.deleteTeacher = function(row) {
+                TeacherDataProvider.deleteTeacher(row.entity._id, function(old){
                     $scope.teachers.splice($scope.teachers.indexOf(old),1);
                     $('#removeTeacherDialog').modal('hide');
                 })
@@ -72,27 +76,35 @@ angular.module('schoolManage')
             };
 
             $scope.createTeacher = function () {
-                if (($scope.newTeacher === undefined) || ($scope.newTeacher.name == '') || ($scope.newTeacher.name === undefined) || ($scope.newTeacher.username == '') || ($scope.newTeacher.username === undefined)) {
-                    alert('请填写新老师名称');
-                    return;
+                var info = {};
+                info.name = $scope.newTeacher.name;
+                info.username = $scope.newTeacher.username;
+                info.school = me.school._id;
+                info.roles = ['teacher'];
+                if($scope.isAdmin) {
+                    info.roles.push('admin');
                 }
-                if (!$scope.newTeacher.username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
-                    alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。');
-                    return;
-                }
-                TeacherDataProvider.createTeacher({
-                    "name": $scope.newTeacher.name,
-                    "username": $scope.newTeacher.username,
-                    "school": me.school,
-                    "callBack": function (err, teacher) {
-                        if (err) {
-                            alert('创建失败，可能由于用户已存在。');
-                            return;
-                        }
-                        teachers.push(teacher);
+                info.password = 'xiaoshu';
+                TeacherDataProvider.createTeacher(info)
+                    .success(function(teacher){
+                        $scope.teachers.push(teacher);
                         $scope.newTeacher = undefined;
-                    }
-                });
+                        $('#createTeacherDialog').modal('hide');
+                        swal({
+                            title: "创建成功",
+                            text: "此用户名可登录晓书教师账号和教师平台\n教师平台默认密码为xiaoshu",
+                            type: "success",
+                            confirmButtonColor: "#2E8B57",
+                            confirmButtonText: "确定",
+                            closeOnConfirm: false })
+                    })
+                    .error(function(err){
+                        console.error(err);
+                        if(err.code === 11000) {
+                            $scope.errorMessage = "用户名已存在，请修改后重试"
+                        }
+                        swal({title: "创建失败", text: $scope.errorMessage, type: 'error'});
+                    });
             };
 
 

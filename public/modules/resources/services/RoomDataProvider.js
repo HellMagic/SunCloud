@@ -1,189 +1,213 @@
 angular.module('schoolManage')
     .factory('RoomDataProvider', ['$http', '$q', function ($http, $q) {
-        var createRoom = function (info, callBack) {
-            $http({
+
+        var createAdminRoom = function (info) {
+            return $http({
                 method: "POST",
                 url: "/rooms",
                 data: {
                     "name": info.name,
                     "school": info.school,
+                    "roomType": 'admin',
                     "students": [],
-                    "teachers": [{}]
+                    "teachers": []
                 }
-            }).success(function (room) {
-                callBack(null, room);
-            }).error(function (err) {
-                callBack(err);
-            });
+            })
         };
 
-        var getRoom = function (roomId, callBack) {
+        var createTeachingRoom = function (info) {
+            return $http({
+                method: "POST",
+                url: "/rooms",
+                data: {
+                    "name": info.name,
+                    "school": info.school,
+                    "roomType": 'teaching',
+                    "students": [],
+                    "teachers": []
+                }
+            })
+        };
+
+
+        var getRoom = function (roomId) {
             var defered = $q.defer();
-            var roomPromise = defered.promise;
+            var thePromise = defered.promise;
             $http({
                 method: "GET",
                 url: "/rooms/" + roomId
-            }).success(function (room) {
+            }).success(function(room){
                 defered.resolve(room);
-                if(callBack){
-                    callBack(room);
-                }
-            }).error(function (err) {
-                console.error(err);
-            });
-            return roomPromise;
-        };
-        var getRoomFull = function (roomId) {
-            var defered = $q.defer();
-            var roomPromise = defered.promise;
-            $http({
-                method: "GET",
-                url: "/rooms/" + roomId + "?populate=teachers.teacher,students"
-            }).success(function (room) {
-                defered.resolve(room);
-            }).error(function (err) {
+            }).error(function(err){
                 defered.reject(err);
             });
-            return roomPromise;
-        };
-        var getRoomsBySchool = function (schoolId) {
-            var defered = $q.defer();
-            var roomPromise = defered.promise;
-            $http({
-                method: "GET",
-                url: "/rooms?school=" + schoolId + "&populate=teachers.teacher"
-            }).success(function (rooms) {
-                defered.resolve(rooms);
-            }).error(function (err) {
-                console.error(err);
-            });
-            return roomPromise;
-        };
-        var getRoomsByUser = function (role) {
-            var id = "";
-            if (role === "teacher") {
-                id = $route.current.params.teacherId;
-            } else if (role === "student") {
-                id = $route.current.params.studentId;
-            } else {
-                var err = new Error('The param "role" should be "teacher" or "student".');
-                return console.error(err);
-            }
-            var defered = $q.defer();
-            var roomPromise = defered.promise;
-            $http({
-                method: "GET",
-                url: "/rooms/?" + role + "s=" + id + "&populate=school"
-            }).success(function (rooms) {
-                defered.resolve(rooms);
-            }).error(function (err) {
-                console.error(err);
-            });
-            return roomPromise;
-        };
-        var getCountsOfRoomsBySchool = function (schoolId, callBack) {
-            $http({
-                method: "GET",
-                url: "/rooms/count?school=" + schoolId
-            }).success(function (counts) {
-                callBack(counts)
-            }).error(function (err) {
-                console.error(err);
-            });
+            return thePromise;
         };
 
-        var editRoom = function (room, callBack) {
+        var getRoomFull = function (roomId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
             $http({
+                method: "GET",
+                url: "/rooms/" + roomId + "?populate=teachers,students"
+            }).success(function(room){
+                defered.resolve(room);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getRoomsBySchool = function (schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?school=" + schoolId + "&populate=teachers"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getAdminRoomsBySchool = function (schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?school=" + schoolId + "&roomType=admin&populate=teachers"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+
+
+        var getRoomsByTeacher = function (teacherId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms/?teachers=" + teacherId + "&populate=school"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getRoomsByStudent = function (studentId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms/?students=" + studentId + "&populate=school"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getCountsOfRoomsBySchool = function (schoolId, callBack) {
+            return $http({
+                method: "GET",
+                url: "/rooms/count?school=" + schoolId
+            }).success(function(count){
+                callBack(count)
+            }).error(function(err){
+                console.log(err);
+            })
+        };
+
+        var editRoom = function (room) {
+            return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,
                 data: room
-            }).success(function (room) {
-                callBack(room);
-            }).error(function (err) {
-                console.error(err);
-            });
-        };
-        var deleteRoom = function (roomId, callBack) {
-            $http({
-                method: "DELETE",
-                url: "/rooms/" + roomId
-            }).success(function (room) {
-                callBack(room);
-            }).error(function (err) {
-                console.error(err);
-            });
+            })
         };
 
-        var removeStudentFromRoom = function (room, studentId, callBack) {
-            console.log(room.students);
+        var deleteRoom = function (roomId) {
+            return $http({
+                method: "DELETE",
+                url: "/rooms/" + roomId
+            })
+        };
+
+        var removeStudentFromRoom = function (room, studentId) {
             var students = _.filter(room.students, function(student){
                 return student !== studentId;
             });
-            $http({
+            return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,
                 data: {
                     students: students
                 }
-            }).success(function(room) {
-                callBack(room);
-            }).error(function(err) {
-                console.error(err);
             })
         };
 
-        var removeTeacherFromRoom = function (room, teacherId, callBack) {
+        var removeTeacherFromRoom = function (room, teacherId) {
             var teachers = _.filter(room.teachers, function(teacher){
                 return teacher !== teacherId;
             });
-            $http({
+            return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,
                 data: {
                     teachers: teachers
                 }
-            }).success(function(room) {
-                callBack(room);
-            }).error(function(err) {
-                console.error(err);
             })
 
         };
 
-        var addStudentsToRoom = function(room, students, callBack) {
+        var addStudentsToRoom = function(room, students) {
             var studentsNow = room.students;
-            if(studentsNow.length){
                 studentsNow = studentsNow.concat(students);
-            }else{
-                studentsNow = students;
-            }
-            console.log(studentsNow);
-            $http({
+            return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,
                 data: {
                     "students" : studentsNow
                 }
-            }).success(function(room) {
-                callBack(room);
-            }).error(function(err) {
-                console.error(err);
             })
-
-
-
         };
+
+        var addTeachersToRoom = function(room, teachers) {
+            var teachersNow = room.teachers;
+                teachersNow = teachersNow.concat(teachers);
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + room._id,
+                data: {
+                    "teachers" : teachersNow
+                }
+            })
+        };
+
         return {
-            createRoom: createRoom,
+            createAdminRoom: createAdminRoom,
+            createTeachingRoom: createTeachingRoom,
             getRoom: getRoom,
             getRoomFull: getRoomFull,
             getRoomsBySchool: getRoomsBySchool,
-            getRoomsByUser: getRoomsByUser,
+            getAdminRoomsBySchool: getAdminRoomsBySchool,
+            getRoomsByTeacher: getRoomsByTeacher,
+            getRoomsByStudent: getRoomsByStudent,
             getCountsOfRoomsBySchool: getCountsOfRoomsBySchool,
             editRoom: editRoom,
             deleteRoom: deleteRoom,
             removeStudentFromRoom: removeStudentFromRoom,
             removeTeacherFromRoom: removeTeacherFromRoom,
-            addStudentsToRoom: addStudentsToRoom
+            addStudentsToRoom: addStudentsToRoom,
+            addTeachersToRoom: addTeachersToRoom
         };
     }]);

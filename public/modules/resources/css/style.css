@@ -10,6 +10,97 @@
 
 }
 
+
+.app-header{
+    background-color: #00A352;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: white;
+    margin-top: 8px;
+    height: 60px;
+}
+
+
 /*.roomView {*/
     /*margin-top: 100px;*/
 /*}*/
+
+.ngHeaderCell {
+    background-color: #008B00 !important;
+    bottom: 0;
+    color: #ffffff !important;
+    position: absolute;
+    top: 0;
+}
+.ngCellElement:focus {
+    outline: 0;
+    background-color: #ff0000;
+}
+/******** Rows ********/
+.ngRow {
+    position: absolute;
+    border-bottom: 1px solid rgb(229, 229, 229);
+}
+.ngRow.even {
+    background-color: #f3f9f1;
+    /*#e0eee8;*/
+}
+.ngRow.odd {
+    background-color: rgb(253, 253, 253);
+}
+.ngRow.selected {
+    background-color: #e0f0e9;
+}
+.ngRow.canSelect {
+    cursor: pointer;
+}
+
+.ngViewport{
+    height:auto !important;
+    min-height: 500px !important;
+}
+.ngCanvas, .ngViewport, .ngRow, .ngFooterPanel, .ngTopPanel   {
+    width: 100% !important;
+}
+.ngRow {
+    border-bottom:none !important;
+}
+/*.ngGrid {*/
+    /*padding: 0;*/
+    /*border: none;*/
+    /*border-collapse:collapse*/
+/*}*/
+
+/*.ngColList {*/
+    /*list-style-type: none;*/
+    /*margin-top: 2px;*/
+    /*margin-left: 8px;*/
+    /*border: 0;*/
+/*}*/
+/*.ngColListItem {*/
+    /*white-space: nowrap;*/
+    /*border: 0;*/
+/*}*/
+/*.ngCell {*/
+    /*overflow: hidden;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*bottom: 0;*/
+    /*background-color: inherit;*/
+    /*border: 0;*/
+/*}*/
+
+/*.ngGroupArrow {*/
+    /*width: 0;*/
+    /*height: 0;*/
+    /*border-top: 0 !important*/
+    /*border-bottom: 0px solid transparent;*/
+    /*border-left: 0px solid black;*/
+    /*margin-top: 10px;*/
+    /*margin-left: 5px;*/
+    /*margin-right: 5px;*/
+    /*float: right;*/
+/*}*/
+.ngVerticalBarVisible{
+    display: none;
+}

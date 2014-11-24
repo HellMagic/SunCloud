@@ -169,7 +169,7 @@ exports.tabletLogout = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             })
         }else{
-            res.status(200);
+            res.send(200);
         }
     });
 

@@ -22,7 +22,8 @@ var userTabletSchema = new Schema({
         ref: 'Tablet'
     },
     access_token: String,
-    loginTime: Date
+    logout_at: Date,
+    login_at: Date
 
 });
 
@@ -41,7 +42,7 @@ userTabletSchema.statics.addRecord = function(userId, tabletId,callBack){
         access_token: calculateAccessToken(userId, tabletId),
         userId: userId,
         tabletId: tabletId,
-        loginTime: Date.now()
+        login_at: Date.now()
     };
 
     var record = new this(newRecord);

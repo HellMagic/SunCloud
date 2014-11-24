@@ -1,5 +1,5 @@
 angular.module('schoolManage')
-    .factory('TabletDataProvider', ['$http', '$q', '$route', function ($http, $q, $route) {
+    .factory('TabletDataProvider', ['$http', '$q', function ($http, $q) {
         var getXiaoshuBySchool = function (schoolId, callBack) {
             $http({
                 method: "GET",

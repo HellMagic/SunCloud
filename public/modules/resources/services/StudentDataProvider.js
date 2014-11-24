@@ -1,7 +1,7 @@
 angular.module('schoolManage')
-    .factory('StudentDataProvider', ['$http', '$q', "$route", function ($http, $q, $route) {
+    .factory('StudentDataProvider', ['$http', '$q', function ($http, $q) {
 
-        var getStudentsBySchool = function(schoolId, callBack) {
+        var getStudentsBySchool = function(schoolId) {
             var defered = $q.defer();
             var studentsBySchoolPromise = defered.promise;
             $http({
@@ -9,47 +9,60 @@ angular.module('schoolManage')
                 url: "/users?roles=student&school=" + schoolId
             }).success(function(students){
                 defered.resolve(students);
-                if(callBack){
-                    callBack(students);
-                }
             }).error(function(err) {
-                console.error(err);
+                defered.reject(err);
             });
             return studentsBySchoolPromise;
-
         };
 
         var getCountsOfStudentsBySchool = function(schoolId, callBack){
             $http({
                 method: "GET",
                 url: "/users/count?roles=student&school=" + schoolId
-            }).success(function(counts){
-                callBack(counts);
-            }).error(function(err){
+            }).success(function(counts) {
+                if(callBack) {
+                    callBack(counts);
+                }
+            }).error(function(err) {
                 console.error(err);
             })
         };
 
         var createStudent = function (info) {
-            $http({
+            return $http({
                 method: "POST",
                 url: "/users",
-                data: {
-                    "name": info.name,
-                    "username": info.username,
-                    "school": info.school,
-                    "roles": ["student"]
-                }
-            }).success(function (student) {
-                info.callBack(undefined,student);
-            }).error(function (err) {
-                    info.callBack('Username already exists');
-            });
+                data: info
+            })
         };
-        /**
-         * TODO: NEED EDIT $route.current.params.studentId
-         * @returns {jQuery.promise|promise.promise|promise|d.promise|.ready.promise|jQuery.ready.promise}
-         */
+
+        var createStudentBatch = function (studentsList, callBack) {
+            var successList = [];
+            var failList = [];
+            _.each(studentsList, function(student) {
+                console.log(student);
+                $.ajax({
+                    url: "/users",
+                    method: "POST",
+                    async: false,
+                    data: student,
+                    success: function (newStudent) {
+                        console.log(newStudent);
+                        successList.push(newStudent)
+                    },
+                    error: function(err) {
+                        console.error(err);
+                        failList.push(student)
+                    },
+                    dataType: "json"
+                });
+            });
+            console.log('success:' + successList);
+            console.log('fail: ' + failList);
+            callBack(successList, failList);
+
+        };
+
         var getStudent = function (studentId, callBack) {
             var defered = $q.defer();
             var studentPromise = defered.promise;
@@ -66,36 +79,26 @@ angular.module('schoolManage')
             });
             return studentPromise;
         };
-        var editStudent = function (student, callBack) {
-            $http({
+
+        var editStudent = function (student) {
+            return $http({
                 method: "PUT",
                 url: "/users/" + student._id,
                 data: student
-            }).success(function (student) {
-                callBack(undefined, student);
-            }).error(function (err) {
-                callBack(err);
-            });
-        };
-        var removeStudent = function (studentId, callBack) {
-            $http({
-                method: "DELETE",
-                url: "/users/" + studentId
-            }).success(function (student) {
-                callBack(student);
-            }).error(function (err) {
-                console.error(err);
-            });
+            })
         };
 
-        var getStudentRoom = function(studentId, callBack) {
-            $http({
+        var removeStudent = function (studentId) {
+            return $http({
+                method: "DELETE",
+                url: "/users/" + studentId
+            })
+        };
+
+        var getStudentRoom = function(studentId) {
+            return $http({
                 method: "GET",
                 url: "/rooms?students=" + studentId
-            }).success(function (rooms){
-                callBack(rooms);
-            }).error(function(err){
-                console.error(err);
             })
 
         };
@@ -104,6 +107,7 @@ angular.module('schoolManage')
             getStudentsBySchool: getStudentsBySchool,
             getCountsOfStudentsBySchool: getCountsOfStudentsBySchool,
             createStudent: createStudent,
+            createStudentBatch: createStudentBatch,
             getStudent: getStudent,
             editStudent: editStudent,
             removeStudent: removeStudent,

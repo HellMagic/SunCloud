@@ -12,22 +12,23 @@ var AppSchema = new Schema({
     },
     name: {
         type: String,
+        unique: true,
         required: true
     },
-    version: {
-        type: String
-    },
-    version_name: String,
+    versionCode: Number,
+    versionName: String,
     created_at: Date,
     deleted_at: Date,
     file_content_type: String,
     file_file_name: String,
     file_file_size: Number,
     file_updated_at: Date,
-    pakage: String,
+    package: String,
+    file_path: String,
+    file_name: String,
     status: {
         type: String,
-        enum: ['release']
+        enum: ['release', 'test']
     },
     updated_at: Date,
     uuid: String,
@@ -40,13 +41,40 @@ var AppSchema = new Schema({
     url: {
         type: String
     },
-    apk: {
-        type: String,
-        required: true
-    },
+    apks: [{
+        versionCode: Number,
+        versionName: String,
+        package: String,
+        fileName: String,
+        size: Number
+    }],
     disableNetwork: {
         type: Boolean
 
+    },
+    default_installed: {
+        type: Boolean,
+        default: false
+    } ,
+    create_by: {
+        type: String,
+        enum:['root', 'admin', 'teacher']
+    },
+    school: {
+        type: Schema.Types.ObjectId,
+        ref: 'School'
+    },
+    rooms: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Room'
+    }],
+    teacher: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    shared: {
+        type: Boolean,
+        default: true
     }
 });
 

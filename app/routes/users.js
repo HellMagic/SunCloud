@@ -6,6 +6,10 @@
 var passport = require('passport');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
+var multer = require('multer');
+
+//var multipartMiddleware = multipart({uploadDir: __dirname+ '/../../upload/tmp'});
+var busboyMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
 module.exports = function(app) {
 	// User Routes
@@ -13,6 +17,8 @@ module.exports = function(app) {
 	var rooms = require('../../app/controllers/rooms');
 	var schools = require('../../app/controllers/schools');
 	var userTablets = require('../../app/controllers/userTablets');
+	var apps = require('../../app/controllers/apps');
+
 
 
 	// Setting up the users profile api
@@ -40,6 +46,8 @@ module.exports = function(app) {
 
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
+
+	app.route('/upload/app/:appId').post(busboyMiddleware, apps.upload);
 
 	//app.post('/users', user.requiresLogin, users.create);
 
@@ -94,12 +102,22 @@ module.exports = function(app) {
 		findOneAndUpdate: false
 	};
 
+	var appOptions = {
+		strict: true,
+		prefix: '',
+		version: '',
+		middleware: [users.restify],
+		findOneAndUpdate: false
+	};
+
 	var UserModel = mongoose.model('User');
 	var SchoolModel = mongoose.model('School');
 	var RoomModel = mongoose.model('Room');
 	var UserTabletModel = mongoose.model('UserTablet');
 	var SubjectModel = mongoose.model('Subject');
 	var TabletModel = mongoose.model('Tablet');
+	var AppModel = mongoose.model('App');
+
 
 	restify.serve(app, UserModel, userOptions);
 	restify.serve(app, SchoolModel, schoolOptions);
@@ -107,6 +125,7 @@ module.exports = function(app) {
 	restify.serve(app, UserTabletModel, userTabletOptions);
 	restify.serve(app, SubjectModel, subjectOptions);
 	restify.serve(app, TabletModel, tabletOptions);
+	restify.serve(app, AppModel, appOptions);
 
 
 
@@ -114,7 +133,6 @@ module.exports = function(app) {
 	app.param('userId', users.user);
 	app.param('roomId', rooms.getRoomById);
 	app.param('schoolId', schools.getSchoolById);
-//    app.param('classNumber', schools.class);
 
 
 
